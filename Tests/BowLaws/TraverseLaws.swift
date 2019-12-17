@@ -2,12 +2,20 @@ import SwiftCheck
 import Bow
 import BowGenerators
 
+extension Traverse {
+    static func ctraverse<G: Applicative, A, B>(_ f: @escaping (A) -> Kind<G, B>) -> (Kind<Self, A>) -> Kind<G, Kind<Self, B>> {
+        return curry(reverse(traverse))(f)
+    }
+}
+
 public class TraverseLaws<F: Traverse & EquatableK & ArbitraryK> {
     public static func check() {
         identityTraverse()
         sequentialComposition()
         parallelComposition()
         foldMapDerived()
+        identityScan()
+        pureFunctionScan()
     }
     
     private static func identityTraverse() {
@@ -16,6 +24,51 @@ public class TraverseLaws<F: Traverse & EquatableK & ArbitraryK> {
             return Id.fix(F.traverse(fa.value, f)).value == F.map(F.map(fa.value, f), { a in Id.fix(a).value })
         }
     }
+
+    private static func identityScan() {
+        property("Identity traverse") <~ forAll { (fa: KindOf<F, Int>) in
+            let f: (Int) -> State<Void, Int> = { i in .init { ((), i) } }
+
+            let k = F.scanLeft(fa.value, initialState: (), f: f)
+
+            return k == fa.value
+        }
+    }
+
+    private static func pureFunctionScan() {
+        property("Pure function scan") <~ forAll { (afa: KindOf<F, Int>, af: ArrowOf<Int, Int>) in
+            let fa: Kind<F, Int> = afa.value
+            let f: (Int) -> Int = af.getArrow
+
+            let sf: (Int) -> State<Void, Int> = { i in .init { ((), f(i)) } }
+
+            // f == runVoid <<< sf
+            func runVoid<T>(_ s: StateTOf<ForId, Void, T>) -> T { () |> StateT<ForId, Void, T>.runA(s^) }
+
+            let proof: [Kind<F, Int>] = [
+                F.scanLeft(fa, initialState: (), f: sf),
+// Applying the definition of scan:
+                F.traverse(fa, sf)^.runA(()),
+// Let's us the uncurried version of traverse:
+                F.ctraverse(sf)(fa) |> runVoid,
+                fa |> (runVoid <<< F.ctraverse(sf)),
+// And now by the naturality law of Traversal:
+                (fa |> F.ctraverse(Id.init <<< runVoid <<< sf))^.value,
+                (F.ctraverse(Id.init <<< runVoid <<< sf)(fa))^.value,
+// Let's curry:
+                F.traverse(fa, Id.init <<< runVoid <<< sf)^.value,
+// sf ~= f
+                F.traverse(fa, Id.init <<< f)^.value,
+// Traverse a monadic Id function == map
+                F.map(fa, f)
+            ]
+        }
+    }
+
+    // Id is applicative:
+//    ForId.ap(Id(runVoid <<< F.ctraverse(sf)), Id(fa))^,
+    // compose <$> Id(runVoid) <*> Id(F.ctraverse(sf)) <*> Id(fa)
+//    ForId.ap(ForId.map(Id(runVoid), Id(F.ctraverse(sf)), compose), Id(fa))^,
     
     private static func sequentialComposition() {
         property("Sequential composition") <~ forAll { (f: ArrowOf<Int, Id<Int>>, g: ArrowOf<Int, Id<Int>>, x: KindOf<F, Int>) in
