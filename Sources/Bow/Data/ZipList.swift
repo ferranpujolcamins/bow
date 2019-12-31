@@ -41,14 +41,14 @@ public postfix func ^<A>(_ fa: ZipListOf<A>) -> ZipList<A> {
     ZipList.fix(fa)
 }
 
-// MARK: Instance of `Functor` for `ZipArray`
+// MARK: Instance of `Functor` for `ZipList`
 extension ForZipList: Functor {
     public static func map<A, B>(_ fa: Kind<ForZipList, A>, _ f: @escaping (A) -> B) -> Kind<ForZipList, B> {
         ZipList(fa^.asSequence.map(f))
     }
 }
 
-// MARK: Instance of `Applicative` for `ZipArray`
+// MARK: Instance of `Applicative` for `ZipList`
 extension ForZipList: Applicative {
     public static func pure<A>(_ a: A) -> Kind<ForZipList, A> {
         ZipList(sequence(first: a, next: { _ in a }))
@@ -58,5 +58,25 @@ extension ForZipList: Applicative {
         ZipList(
             Swift.zip(fa^.asSequence, ff^.asSequence).lazy.map(|>)
         )
+    }
+}
+
+// MARK: Instance of `Foldable`for `ZipList`
+extension ForZipList: Foldable {
+    public static func foldLeft<A, B>(_ fa: Kind<ForZipList, A>, _ b: B, _ f: @escaping (B, A) -> B) -> B {
+        fa^.asSequence.reduce(b, f)
+    }
+
+    public static func foldRight<A, B>(_ fa: Kind<ForZipList, A>, _ b: Eval<B>, _ f: @escaping (A, Eval<B>) -> Eval<B>) -> Eval<B> {
+
+        func loop(_ it: AnyIterator<A>) -> Eval<B> {
+            if let a = it.next() {
+                return .defer { f(a, loop(it)) }
+            } else {
+                return b
+            }
+        }
+
+        return loop(fa^.asSequence.makeIterator())
     }
 }

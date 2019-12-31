@@ -17,4 +17,8 @@ class ZipListTest: XCTestCase {
     func testApplicativeLaws() {
         ApplicativeLaws<ForZipList>.check()
     }
+
+    func testFoldableLaws() {
+        FoldableLaws<ForZipList>.check()
+    }
 }
