@@ -4,6 +4,49 @@ public final class ForZipList {}
 
 public typealias ZipListOf<A> = Kind<ForZipList, A>
 
+/// ZipLists wraps a (possibly infinite) Swift sequence providing an Applicative
+/// instance based on zipping.
+///
+/// In other words, `ap` applies a list of functions to a list of values
+/// component-wise, instead of applying every function to every value like the standard
+/// list applicative instance does.
+///
+/// This means, for instance, that
+///
+///     ap(ZipList([{ $0 + 1 }, { $0 + 2 }]),
+///        ZipList([0, 1])
+///     ) == [1, 3]
+///
+/// while with ArrayK we'd get
+///
+///     ap(ArrayK([{ $0 + 1 }, { $0 + 2 }]),
+///        ArrayK([0, 1])
+///     ) == [1, 2, 2, 3]
+///
+/// `pure(a)` produces the infinite sequence (a, a, a, ...).
+///
+/// Infinite sequences
+/// ==================
+///
+/// In order for ZipList to be a lawful Applicative instance, we need to allow infinite lists.
+/// To see why, consider the applicative Identity law:
+///
+///     ap(pure(id), v) == v
+///
+/// `ap` zips the sequence of functions with the sequence of values and then applies each function to its paired value.
+/// Thus the Identity law translates to:
+///
+///     Swift.zip(pure(id), v).map(|>)
+///
+/// The law must be true for any ZipList `v`, which might hold a sequence of any lengh. Thus, the result of
+///
+///     Swift.zip(pure(id), v)
+///
+/// must have the same lenght than `v`, otherwise they cannot be equal.
+///
+/// Since Swift.zip produces a list as long as the shortest of its arguments, we conclude that `pure(id)` must
+/// be a list of infinite lenght, otherwise, there would exist some list longer than `pure(id)` for which the
+/// Identity law would fail.
 public final class ZipList<A>: ZipListOf<A> {
     private var sequence: AnySequence<A>
 
@@ -58,6 +101,8 @@ public final class ZipList<A>: ZipListOf<A> {
     }
 
     /// Obtains the wrapped sequence.
+    ///
+    /// This sequence needs to be lazy because it can be an infinite sequence.
     public var asSequence: LazySequence<AnySequence<A>> {
         sequence.lazy
     }
