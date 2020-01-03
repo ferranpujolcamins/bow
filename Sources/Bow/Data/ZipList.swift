@@ -45,6 +45,13 @@ public final class ZipList<A>: ZipListOf<A> {
 
     /// Initializes a `ZipList`.
     ///
+    /// - Parameter arrayk: An array of values.
+    public init(_ arrayk: ArrayKOf<A>) {
+        self.sequence = AnySequence(arrayk^.asArray)
+    }
+
+    /// Initializes a `ZipList`.
+    ///
     /// - Parameter values: A variable number of values.
     public init(_ values: A...) {
         self.sequence = AnySequence(values)
@@ -53,6 +60,14 @@ public final class ZipList<A>: ZipListOf<A> {
     /// Obtains the wrapped sequence.
     public var asSequence: LazySequence<AnySequence<A>> {
         sequence.lazy
+    }
+
+    /// Obtains the wrapped sequence converted into an Array.
+    ///
+    /// - Warning: This operation might never end if the ZipList wraps
+    ///            an infinite sequence.
+    public var asArrayK: ArrayK<A> {
+        ArrayK(Array(sequence))
     }
 
     public static func fix(_ fa: ZipListOf<A>) -> ZipList<A> {
