@@ -7,6 +7,35 @@ public typealias ZipListOf<A> = Kind<ForZipList, A>
 public final class ZipList<A>: ZipListOf<A> {
     private var sequence: AnySequence<A>
 
+    /// Concatenates two ZipLists
+    ///
+    /// - Parameters:
+    ///   - lhs: Left hand side of the concatenation.
+    ///   - rhs: Right hand side of the concatenation.
+    /// - Returns: A ZipList that contains the elements of the two ZipLists in the order they appear in the original ones.
+    public static func +(lhs: ZipList<A>, rhs: ZipList<A>) -> ZipList<A> {
+        return ZipList([lhs.sequence, rhs.sequence].joined())
+    }
+
+    /// Prepends an element to a ZipList.
+    ///
+    /// - Parameters:
+    ///   - lhs: Element to prepend.
+    ///   - rhs: Array.
+    /// - Returns: A ZipList containing the prepended element at the head and the other ZipList as the tail.
+    public static func +(lhs: A, rhs: ZipList<A>) -> ZipList<A> {
+        return ZipList(lhs) + rhs
+    }
+
+    /// Appends an element to a ZipList.
+    ///
+    /// - Parameters:
+    ///   - lhs: Array.
+    ///   - rhs: Element to append.
+    /// - Returns: A ZipLists containing all elements of the first ZipLists and the appended element as the last element.
+    public static func +(lhs: ZipList<A>, rhs: A) -> ZipList<A> {
+        return lhs + ZipList(rhs)
+    }
     /// Initializes a `ZipList`.
     ///
     /// - Parameter array: A Swift array of values.
