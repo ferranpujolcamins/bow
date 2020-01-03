@@ -95,7 +95,7 @@ extension ForZipList: Functor {
 // MARK: Instance of `Applicative` for `ZipList`
 extension ForZipList: Applicative {
     public static func pure<A>(_ a: A) -> Kind<ForZipList, A> {
-        ZipList(sequence(first: a, next: { _ in a }))
+        ZipList(Swift.sequence(first: a, next: { _ in a }))
     }
 
     public static func ap<A, B>(_ ff: Kind<ForZipList, (A) -> B>, _ fa: Kind<ForZipList, A>) -> Kind<ForZipList, B> {
@@ -105,7 +105,7 @@ extension ForZipList: Applicative {
     }
 }
 
-// MARK: Instance of `Foldable`for `ZipList`
+// MARK: Instance of `Foldable` for `ZipList`
 extension ForZipList: Foldable {
     public static func foldLeft<A, B>(_ fa: Kind<ForZipList, A>, _ b: B, _ f: @escaping (B, A) -> B) -> B {
         fa^.asSequence.reduce(b, f)
@@ -122,5 +122,15 @@ extension ForZipList: Foldable {
         }
 
         return loop(fa^.asSequence.makeIterator())
+    }
+}
+
+// MARK: Instance of `Traverse` for `ZipList`
+extension ForZipList: Traverse {
+    public static func traverse<G, A, B>(_ fa: Kind<ForZipList, A>, _ f: @escaping (A) -> Kind<G, B>) -> Kind<G, Kind<ForZipList, B>> where G : Applicative {
+
+        let x = foldRight(fa, Eval.always({ G.pure(ZipList<B>([])) }),
+                          { a, eval in G.map2Eval(f(a), eval, { x, y in ZipList<B>(x) + y }) }).value()
+        return G.map(x, { a in a as ZipListOf<B> })
     }
 }
