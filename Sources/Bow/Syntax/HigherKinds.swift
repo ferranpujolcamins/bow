@@ -1,5 +1,11 @@
 import Foundation
 
+public protocol SomeKind {
+    associatedtype F
+    associatedtype A
+    
+}
+
 /// Simulates a Higher-Kinded Type in Swift with 1 type argument.
 ///
 /// This class simulates Higher-Kinded Type support in Swift. `Kind<F, A>` is an alias for `F<A>`, which is not syntactically valid in Swift.
@@ -7,7 +13,7 @@ import Foundation
 ///
 ///     class ForOption {}
 ///     class Option<A>: Kind<ForOption, A> {}
-open class Kind<F, A> {
+open class Kind<F, A>: SomeKind {
     /// Default initializer
     public init() {}
 }

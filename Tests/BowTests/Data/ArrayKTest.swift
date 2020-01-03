@@ -79,6 +79,22 @@ class ArrayKTest: XCTestCase {
         }
     }
 
+    func testTranspose() {
+        property("Matrix transposition") <~ forAll { (a: ArrayK<ArrayK<Int>>) in
+            guard a.count > 0 else {
+                return a.transpose() == ArrayK([])
+            }
+
+            let array = a.asArray
+            let lenghtOfShortestRow = array.map { $0.count }.min()!
+            let transposed = a.transpose().asArray
+
+            let indices = array.indices.flatMap { i in (0..<lenghtOfShortestRow).map { j in (i, Int(j)) } }
+
+            return indices.map { array[$0.0][$0.1] == transposed[$0.1][$0.0] }.foldLeft(true, { $0 && $1 })
+        }
+    }
+    
     func testScan1() {
         let initialValue =  -1
         let input        = [-1,  0,  1, 2]

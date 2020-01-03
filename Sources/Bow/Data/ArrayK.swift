@@ -123,6 +123,21 @@ public postfix func ^<A>(_ fa: ArrayKOf<A>) -> ArrayK<A> {
     return ArrayK.fix(fa)
 }
 
+// MARK: Convenience methods for arrays of arrays
+public extension ArrayK where A: SomeKind, A.F == ForArrayK {
+    func transpose() -> ArrayK<A> {
+        guard count > 0 else { return self }
+        
+        let selfZipList: ZipList<ZipList<A.A>> = ZipList(map { ZipList(($0 as! ArrayKOf<A.A>)^) })
+        let transposed = selfZipList.traverse(id)
+        return transposed.map { $0^.asArrayK as! A }^.asArrayK
+    }
+
+    func getOrNone(i: Int, j: Int) -> Option<A.A> {
+        return self[i].flatMap({ (($0 as! ArrayKOf<A.A>)^)[j] })^
+    }
+}
+
 // MARK: Convenience methods to convert to ArrayK
 public extension Array {
     /// Creates an `ArrayK` from this array.
