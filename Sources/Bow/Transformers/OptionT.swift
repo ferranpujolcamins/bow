@@ -279,7 +279,7 @@ extension OptionTPartial: ApplicativeError where F: ApplicativeError {
 extension OptionTPartial: MonadError where F: MonadError {}
 
 // MARK: Instance of `Foldable` for `OptionT`
-extension OptionTPartial: Foldable where F: Foldable {
+extension OptionTPartial: Foldable & FoldableT where F: Foldable {
     public static func foldLeft<A, B>(_ fa: Kind<OptionTPartial<F>, A>, _ b: B, _ f: @escaping (B, A) -> B) -> B {
         return fa^.value.foldLeft(b, { bb, option in option.foldLeft(bb, f) })
     }

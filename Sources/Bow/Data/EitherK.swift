@@ -101,7 +101,7 @@ extension EitherKPartial: Comonad where F: Comonad, G: Comonad {
 }
 
 // MARK: Instance of `Foldable` for `EitherK`.
-extension EitherKPartial: Foldable where F: Foldable, G: Foldable {
+extension EitherKPartial: Foldable & FoldableT where F: Foldable, G: Foldable {
     public static func foldLeft<A, B>(_ fa: Kind<EitherKPartial<F, G>, A>, _ b: B, _ f: @escaping (B, A) -> B) -> B {
         let cop = EitherK<F, G, A>.fix(fa)
         return cop.run.fold(

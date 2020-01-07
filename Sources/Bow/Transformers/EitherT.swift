@@ -235,7 +235,7 @@ extension EitherTPartial: SemigroupK where F: Monad {
 }
 
 // MARK: Instance of `Foldable` for `EitherT`
-extension EitherTPartial: Foldable where F: Foldable {
+extension EitherTPartial: Foldable & FoldableT where F: Foldable {
     public static func foldLeft<A, B>(_ fa: Kind<EitherTPartial<F, L>, A>, _ b: B, _ f: @escaping (B, A) -> B) -> B {
         return fa^.value.foldLeft(b, { bb, either in either.foldLeft(bb, f) })
     }

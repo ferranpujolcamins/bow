@@ -1,25 +1,52 @@
 import Foundation
 
-/// Foldable describes types that have the ability to be folded to a summary value.
-public protocol Foldable {
-    /// Eagerly folds a value to a summary value from left to right.
-    ///
-    /// - Parameters:
-    ///   - fa: Value to be folded.
-    ///   - b: Initial value for the folding process.
-    ///   - f: Folding function.
-    /// - Returns: Summary value resulting from the folding process.
+public protocol FoldableT {
+    associatedtype F
+
+    static func foldLeft<A, B>(_ fa: Kind<Self, A>, _ b: B, _ f: @escaping (B, A) -> B) -> Kind<F, B>
+
+    static func foldRight<A, B>(_ fa: Kind<Self, A>, _ b: Eval<B>, _ f: @escaping (A, Eval<B>) -> Eval<B>) -> Eval<Kind<F, B>>
+}
+
+public protocol Foldable: FoldableT where F == ForId {
     static func foldLeft<A, B>(_ fa: Kind<Self, A>, _ b: B, _ f: @escaping (B, A) -> B) -> B
 
-    /// Lazily folds a value to a summary value from right to left.
-    ///
-    /// - Parameters:
-    ///   - fa: Value to be folded.
-    ///   - b: Initial value for the folding process.
-    ///   - f: Folding function.
-    /// - Returns: Summary value resulting from the folding process.
     static func foldRight<A, B>(_ fa: Kind<Self, A>, _ b: Eval<B>, _ f: @escaping (A, Eval<B>) -> Eval<B>) -> Eval<B>
 }
+
+public extension Foldable {
+    static func foldLeft<A, B>(_ fa: Kind<Self, A>, _ b: B, _ f: @escaping (B, A) -> B) -> Kind<F, B> {
+        let r: B = foldLeft(fa, b, f)
+        return Id(r)
+    }
+
+    static func foldRight<A, B>(_ fa: Kind<Self, A>, _ b: Eval<B>, _ f: @escaping (A, Eval<B>) -> Eval<B>) -> Eval<Kind<F, B>> {
+        let r: Eval<B> = foldRight(fa, b, f)
+        return r.map { Id($0) as Kind<ForId, B> }^
+    }
+}
+
+
+/// Foldable describes types that have the ability to be folded to a summary value.
+//public protocol Foldable {
+//    /// Eagerly folds a value to a summary value from left to right.
+//    ///
+//    /// - Parameters:
+//    ///   - fa: Value to be folded.
+//    ///   - b: Initial value for the folding process.
+//    ///   - f: Folding function.
+//    /// - Returns: Summary value resulting from the folding process.
+//    static func foldLeft<A, B>(_ fa: Kind<Self, A>, _ b: B, _ f: @escaping (B, A) -> B) -> B
+//
+//    /// Lazily folds a value to a summary value from right to left.
+//    ///
+//    /// - Parameters:
+//    ///   - fa: Value to be folded.
+//    ///   - b: Initial value for the folding process.
+//    ///   - f: Folding function.
+//    /// - Returns: Summary value resulting from the folding process.
+//    static func foldRight<A, B>(_ fa: Kind<Self, A>, _ b: Eval<B>, _ f: @escaping (A, Eval<B>) -> Eval<B>) -> Eval<B>
+//}
 
 public extension Foldable {
     /// Folds a structure of values provided that its type has an instance of `Monoid`.
