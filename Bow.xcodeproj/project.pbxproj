@@ -347,6 +347,11 @@
 		8BA0F657217E2E9200969984 /* MonadCombine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F4AD217E2E9200969984 /* MonadCombine.swift */; };
 		8BA0F65B217E2E9200969984 /* FunctorFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F4AE217E2E9200969984 /* FunctorFilter.swift */; };
 		8BB969AD2398661D005520D6 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB969AB239863F0005520D6 /* Queue.swift */; };
+		B5C05C8323FB366900B2190B /* IxFunctor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C05C8223FB366900B2190B /* IxFunctor.swift */; };
+		B5C05C8623FB38D900B2190B /* IxApplicative.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C05C8523FB38D900B2190B /* IxApplicative.swift */; };
+		B5C05C8823FB3A1900B2190B /* IxMonad.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C05C8723FB3A1900B2190B /* IxMonad.swift */; };
+		B5C05C8A23FB3B6600B2190B /* IxStateT.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C05C8923FB3B6600B2190B /* IxStateT.swift */; };
+		B5C05C8C23FB3ED000B2190B /* IxMonadState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C05C8B23FB3ED000B2190B /* IxMonadState.swift */; };
 		B8B910C0234D7F2600E44271 /* Semiring.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B910BF234D7F2600E44271 /* Semiring.swift */; };
 		B8B910C4234D846900E44271 /* SemiringLaws.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B910C3234D846900E44271 /* SemiringLaws.swift */; };
 		B8B910C6234DDA4000E44271 /* BoolInstancesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B910C5234DDA4000E44271 /* BoolInstancesTest.swift */; };
@@ -1103,6 +1108,11 @@
 		8BD6974823F5AD2E000A512F /* BowTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = BowTests.xctestplan; sourceTree = "<group>"; };
 		8BD6974D23F5AE18000A512F /* BowAllTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BowAllTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BD6975123F5AE18000A512F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B5C05C8223FB366900B2190B /* IxFunctor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IxFunctor.swift; sourceTree = "<group>"; };
+		B5C05C8523FB38D900B2190B /* IxApplicative.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IxApplicative.swift; sourceTree = "<group>"; };
+		B5C05C8723FB3A1900B2190B /* IxMonad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IxMonad.swift; sourceTree = "<group>"; };
+		B5C05C8923FB3B6600B2190B /* IxStateT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IxStateT.swift; sourceTree = "<group>"; };
+		B5C05C8B23FB3ED000B2190B /* IxMonadState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IxMonadState.swift; sourceTree = "<group>"; };
 		B8B910BF234D7F2600E44271 /* Semiring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Semiring.swift; sourceTree = "<group>"; };
 		B8B910C3234D846900E44271 /* SemiringLaws.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiringLaws.swift; sourceTree = "<group>"; };
 		B8B910C5234DDA4000E44271 /* BoolInstancesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolInstancesTest.swift; sourceTree = "<group>"; };
@@ -1832,6 +1842,7 @@
 			children = (
 				8BA0F44C217E2E9200969984 /* EitherT.swift */,
 				115488D023BFA0CC00A6DE92 /* EnvT.swift */,
+				B5C05C8923FB3B6600B2190B /* IxStateT.swift */,
 				8BA0F44D217E2E9200969984 /* OptionT.swift */,
 				8BA0F44F217E2E9200969984 /* StateT.swift */,
 				1171ED4A23C48985005362E0 /* StoreT.swift */,
@@ -1942,6 +1953,10 @@
 				8BA0F4A0217E2E9200969984 /* Foldable.swift */,
 				8BA0F4AB217E2E9200969984 /* Functor.swift */,
 				8BA0F4AE217E2E9200969984 /* FunctorFilter.swift */,
+				B5C05C8523FB38D900B2190B /* IxApplicative.swift */,
+				B5C05C8223FB366900B2190B /* IxFunctor.swift */,
+				B5C05C8723FB3A1900B2190B /* IxMonad.swift */,
+				B5C05C8B23FB3ED000B2190B /* IxMonadState.swift */,
 				8BA0F499217E2E9200969984 /* Invariant.swift */,
 				8BA0F4A4217E2E9200969984 /* Monad.swift */,
 				8BA0F4AD217E2E9200969984 /* MonadCombine.swift */,
@@ -3074,12 +3089,15 @@
 				8BA0F637217E2E9200969984 /* Monad.swift in Sources */,
 				111F84FB234DBF95003FE646 /* Set.swift in Sources */,
 				8BA0F60F217E2E9200969984 /* TraverseFilter.swift in Sources */,
+				B5C05C8823FB3A1900B2190B /* IxMonad.swift in Sources */,
+				B5C05C8323FB366900B2190B /* IxFunctor.swift in Sources */,
 				8BA0F5FF217E2E9200969984 /* SemigroupK.swift in Sources */,
 				1137469E2343592300D9C1AD /* Dictionary.swift in Sources */,
 				1191BD0A22D77C510052FEA8 /* BoundVar.swift in Sources */,
 				8BA0F5DF217E2E9200969984 /* ApplicativeError.swift in Sources */,
 				8BA0F64F217E2E9200969984 /* Functor.swift in Sources */,
 				8BA0F517217E2E9200969984 /* Predef.swift in Sources */,
+				B5C05C8C23FB3ED000B2190B /* IxMonadState.swift in Sources */,
 				1137469923433E5800D9C1AD /* Array.swift in Sources */,
 				8BA0F4FB217E2E9200969984 /* Cokleisli.swift in Sources */,
 				110DE5CE23ACE5AD00E5DB36 /* ComonadEnv.swift in Sources */,
@@ -3133,7 +3151,9 @@
 				110DE5CC23ACE29D00E5DB36 /* ComonadStore.swift in Sources */,
 				606B29EA23607607002334B2 /* Divide.swift in Sources */,
 				8BA0F5AF217E2E9200969984 /* Try.swift in Sources */,
+				B5C05C8A23FB3B6600B2190B /* IxStateT.swift in Sources */,
 				8BA0F62B217E2E9200969984 /* NonEmptyReducible.swift in Sources */,
+				B5C05C8623FB38D900B2190B /* IxApplicative.swift in Sources */,
 				8BA0F503217E2E9200969984 /* BooleanFunctions.swift in Sources */,
 				8BA0F4F3217E2E9200969984 /* Function1.swift in Sources */,
 				115488D123BFA0CC00A6DE92 /* EnvT.swift in Sources */,
