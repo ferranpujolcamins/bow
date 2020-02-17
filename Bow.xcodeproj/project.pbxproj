@@ -352,6 +352,8 @@
 		B5C05C8823FB3A1900B2190B /* IxMonad.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C05C8723FB3A1900B2190B /* IxMonad.swift */; };
 		B5C05C8A23FB3B6600B2190B /* IxStateT.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C05C8923FB3B6600B2190B /* IxStateT.swift */; };
 		B5C05C8C23FB3ED000B2190B /* IxMonadState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C05C8B23FB3ED000B2190B /* IxMonadState.swift */; };
+		B5C8D8A823FB5D29000276B3 /* IxStateT+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C8D8A623FB5CA7000276B3 /* IxStateT+Gen.swift */; };
+		B5C8D8AA23FB5F39000276B3 /* IxStateTTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C8D8A923FB5F39000276B3 /* IxStateTTest.swift */; };
 		B8B910C0234D7F2600E44271 /* Semiring.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B910BF234D7F2600E44271 /* Semiring.swift */; };
 		B8B910C4234D846900E44271 /* SemiringLaws.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B910C3234D846900E44271 /* SemiringLaws.swift */; };
 		B8B910C6234DDA4000E44271 /* BoolInstancesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B910C5234DDA4000E44271 /* BoolInstancesTest.swift */; };
@@ -1113,6 +1115,8 @@
 		B5C05C8723FB3A1900B2190B /* IxMonad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IxMonad.swift; sourceTree = "<group>"; };
 		B5C05C8923FB3B6600B2190B /* IxStateT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IxStateT.swift; sourceTree = "<group>"; };
 		B5C05C8B23FB3ED000B2190B /* IxMonadState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IxMonadState.swift; sourceTree = "<group>"; };
+		B5C8D8A623FB5CA7000276B3 /* IxStateT+Gen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IxStateT+Gen.swift"; sourceTree = "<group>"; };
+		B5C8D8A923FB5F39000276B3 /* IxStateTTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IxStateTTest.swift; sourceTree = "<group>"; };
 		B8B910BF234D7F2600E44271 /* Semiring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Semiring.swift; sourceTree = "<group>"; };
 		B8B910C3234D846900E44271 /* SemiringLaws.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiringLaws.swift; sourceTree = "<group>"; };
 		B8B910C5234DDA4000E44271 /* BoolInstancesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolInstancesTest.swift; sourceTree = "<group>"; };
@@ -1356,6 +1360,7 @@
 				1171ED5123C4E20A005362E0 /* EnvT+Gen.swift */,
 				112097DC22A90899007F3D9C /* OptionT+Gen.swift */,
 				112097DE22A90972007F3D9C /* StateT+Gen.swift */,
+				B5C8D8A623FB5CA7000276B3 /* IxStateT+Gen.swift */,
 				112097D322A9029B007F3D9C /* StoreT+Gen.swift */,
 				1171ED5323C4E4B0005362E0 /* TracedT+Gen.swift */,
 				112097E022A90AAA007F3D9C /* WriterT+Gen.swift */,
@@ -1764,6 +1769,7 @@
 				1171ED4E23C4E19A005362E0 /* EnvTTest.swift */,
 				8BA0F398217E2DEF00969984 /* OptionTTest.swift */,
 				8BA0F396217E2DEF00969984 /* StateTTest.swift */,
+				B5C8D8A923FB5F39000276B3 /* IxStateTTest.swift */,
 				8BA0F3B1217E2DEF00969984 /* StoreTTest.swift */,
 				1171ED5523C4E5F2005362E0 /* TracedTTest.swift */,
 				8BA0F395217E2DEF00969984 /* WriterTTest.swift */,
@@ -2718,6 +2724,7 @@
 				112097C922A80870007F3D9C /* ArbitraryK.swift in Sources */,
 				11F0F8DD23C725C500B2EA2E /* Co+Gen.swift in Sources */,
 				112097AF22A7EE46007F3D9C /* Either+Gen.swift in Sources */,
+				B5C8D8A823FB5D29000276B3 /* IxStateT+Gen.swift in Sources */,
 				11E7F5ED22D8C83800C78F06 /* Eval+Gen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3065,6 +3072,7 @@
 				8BA0F408217E2DEF00969984 /* ValidatedTest.swift in Sources */,
 				111F84FE234DC00F003FE646 /* SetTest.swift in Sources */,
 				8BA0F3EB217E2DEF00969984 /* Function1Test.swift in Sources */,
+				B5C8D8AA23FB5F39000276B3 /* IxStateTTest.swift in Sources */,
 				8BA0F3EC217E2DEF00969984 /* Function0Test.swift in Sources */,
 				8BA0F3F0217E2DEF00969984 /* WriterTTest.swift in Sources */,
 				1171ED5C23C62134005362E0 /* (null) in Sources */,

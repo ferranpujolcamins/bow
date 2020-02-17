@@ -1,14 +1,11 @@
 import Foundation
 
-//newtype IxStateT m si so v = IxStateT { runIxStateT:: si -> m (so,v) }
+// TODO: use prefix ix instead of i to avod clash with invariant
 
 public final class ForIxStateT {}
-
-public typealias IxStateTUnary<F, SI, SO, A> = Kind<Kind2<>, A>
-public typealias IxStateTPartial<F> =  Kind<ForIxStateT, F>
-//public final class IxStateTPartial<F>: Kind<ForIxStateT, F> {}
-
-public typealias IxStateTOf<F, SI, SO, A> = Kind3<IxStateTPartial<F>, SI, SO, A>
+public final class IxStateTPartial<F>: Kind<ForIxStateT, F> {} // IxFunctor
+public final class IxStateTUnary<F, SI, SO>: Kind2<IxStateTPartial<F>, SI, SO> {} // Functor
+public typealias IxStateTOf<F, SI, SO, A> = Kind<IxStateTUnary<F, SI, SO>, A>
 
 public final class IxStateT<F, SI, SO, A>: IxStateTOf<F, SI, SO, A> {
     fileprivate let irunF: (SI) -> Kind<F, (SO, A)>
@@ -25,6 +22,7 @@ public final class IxStateT<F, SI, SO, A>: IxStateTOf<F, SI, SO, A> {
 public postfix func ^<F, SI, SO, A>(_ fa : IxStateTOf<F, SI, SO, A>) -> IxStateT<F, SI, SO, A> {
     IxStateT.fix(fa)
 }
+
 
 public typealias ForIxState = ForIxStateT
 
@@ -90,10 +88,20 @@ extension IxStateT where F: Monad {
     }
 }
 
-//extension
+extension IxStateTUnary: Invariant where F: Functor {}
 
-//extension IxStateTPartial: IxFunctor where F: Functor {
-//    public static func imap<SI, SO, A, B>(_ fa: Kind3<IxStateTPartial<F>, SI, SO, A>, _ f: @escaping (A) -> B) -> Kind3<Self, SI, SO, B> {
-//        fa^.ma
-//    }
-//}
+extension IxStateTUnary: Functor where F: Functor {
+    public static func map<A, B>(_ fa: Kind<IxStateTUnary<F, SI, SO>, A>, _ f: @escaping (A) -> B) -> Kind<IxStateTUnary<F, SI, SO>, B> {
+        let k = fa as! Kind<Kind<Kind<IxStateTPartial<F>, SI>, SO>, A>
+        let l: Kind<Kind2<IxStateTPartial<F>, SI, SO>, B> = IxStateTPartial<F>.imap(k, f)
+        return l as! Kind<IxStateTUnary<F, SI, SO>, B>
+    }
+}
+
+extension IxStateTPartial: IxFunctor where F: Functor {
+    public static func imap<SI, SO, A, B>(_ fa: Kind<Kind2<IxStateTPartial<F>, SI, SO>, A>, _ f: @escaping (A) -> B) -> Kind<Kind2<IxStateTPartial<F>, SI, SO>, B> {
+        let l = fa as! IxStateT<F, SI, SO, A>
+        let r = l.itransform({ (s, a) in (s, f(a)) })
+        return r as! Kind<Kind2<IxStateTPartial<F>, SI, SO>, B>
+    }
+}
