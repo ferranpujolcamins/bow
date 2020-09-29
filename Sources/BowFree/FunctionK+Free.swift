@@ -1,5 +1,15 @@
 import Bow
 
+public extension FunctionK where G: Functor {
+    func liftEvalI() -> FunctionK<CoyonedaPartial<F>, G> {
+        { coy in
+        // liftEvalI self (Coyoneda f i) = fmap f (self i)
+//            self.invoke(coy.lower())
+        // TODO: IS THIS RIGHT?
+        }
+    }
+}
+
 public extension FunctionK where F: Functor, G: Functor {
     /// Obtains a natural transformation for the Free Monads of the Functors from this natural transformation.
     ///

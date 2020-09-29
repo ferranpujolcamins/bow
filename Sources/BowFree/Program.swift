@@ -15,17 +15,15 @@ public final class Program<F, A>: ProgramOf<F, A> {
         return fa as! Program<F, A>
     }
 
-//    -- | Interpret a 'Program' by translating each instruction to a
-//    -- 'Monad' action.  Does not use 'view'.
-//    interpret :: forall m instr a. (Functor m, Monad m) =>
-//                 (forall x. instr x -> m x)
-//              -> Program instr a
-//              -> m a
-//    interpret evalI = retract . hoistFree (liftEvalI evalI) . toFree
+    public static func liftF(_ fa: Kind<F, A>) -> Program<F, A> {
+        return fa |> (Coyoneda.liftCoyoneda
+                        >>> Free.liftF
+                        >>> Program.init)
+    }
 
-//    public func foldMapK<M: Monad>(_ f: FunctionK<F, M>) -> Kind<M, A> {
-//
-//    }
+    public func foldMapK<M: Monad>(_ f: FunctionK<F, M>) -> Kind<M, A> {
+        f.liftEvalI().free().invoke(asFree)^.run()
+    }
 }
 
 public postfix func ^<F, A>(_ fa: ProgramOf<F, A>) -> Program<F, A> {

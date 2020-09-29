@@ -22,6 +22,13 @@ public class Coyoneda<F, A>: CoyonedaOf<F, A> {
         return fa as! Coyoneda<F, A>
     }
 
+//    liftCoyoneda :: f a -> Coyoneda f a
+//    liftCoyoneda = Coyoneda id
+
+    public static func liftCoyoneda(_ fa: Kind<F, A>) -> Coyoneda<F, A> {
+        apply(fa, id)
+    }
+
     public init<P>(_ pivot : Kind<F, P>, _ ks : [AnyFunc]) {
         self.pivot = pivot as! Kind<F, Any>
         self.ks = ks
