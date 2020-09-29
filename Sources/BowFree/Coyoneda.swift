@@ -2,7 +2,7 @@ import Foundation
 import Bow
 
 public final class ForCoyoneda {}
-public typealias AnyFunc = (AnyObject) -> AnyObject
+public typealias AnyFunc = (Any) -> Any
 public final class CoyonedaPartial<F>: Kind<ForCoyoneda, F> {}
 public typealias CoyonedaOf<F, A> = Kind<CoyonedaPartial<F>, A>
 
@@ -22,9 +22,6 @@ public class Coyoneda<F, A>: CoyonedaOf<F, A> {
         return fa as! Coyoneda<F, A>
     }
 
-//    liftCoyoneda :: f a -> Coyoneda f a
-//    liftCoyoneda = Coyoneda id
-
     public static func liftCoyoneda(_ fa: Kind<F, A>) -> Coyoneda<F, A> {
         apply(fa, id)
     }
@@ -34,11 +31,22 @@ public class Coyoneda<F, A>: CoyonedaOf<F, A> {
         self.ks = ks
     }
 
-    private func transform<P>() -> (P) -> A {
+    fileprivate func transform<P>() -> (P) -> A {
         return { p in
             let result = self.ks.reduce(p as AnyObject, { current, f in f(current) })
             return result as! A
         }
+    }
+}
+
+internal class CoyonedaFunctionK<F, G>: FunctionK<CoyonedaPartial<F>, G> where G: Functor {
+    internal init(f: FunctionK<F, G>) {
+        self.f = f
+    }
+
+    private let f: FunctionK<F, G>
+    override func invoke<A>(_ fa: Kind<CoyonedaPartial<F>, A>) -> Kind<G, A> {
+        f.invoke(fa^.pivot).map { fa^.transform()($0) }
     }
 }
 

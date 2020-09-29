@@ -92,16 +92,16 @@ fileprivate class StateInterpreter: FunctionK<OpsFPartial, StatePartial<([String
     }
 }
 
-extension FreePartial: EquatableK where F: Monad & EquatableK {
+extension ProgramPartial: EquatableK where F: Monad & EquatableK {
     public static func eq<A>(
-        _ lhs: FreeOf<F, A>,
-        _ rhs: FreeOf<F, A>
+        _ lhs: ProgramOf<F, A>,
+        _ rhs: ProgramOf<F, A>
     ) -> Bool where A: Equatable {
         lhs^.run() == rhs^.run()
     }
 }
 
-class FreeTest: XCTestCase {
+class ProgramTest: XCTestCase {
     func testInterpretsFreeProgram() {
         let state = program().foldMapK(StateInterpreter())^
         let final = state.runS((["Bow"], []))

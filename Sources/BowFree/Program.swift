@@ -22,12 +22,22 @@ public final class Program<F, A>: ProgramOf<F, A> {
     }
 
     public func foldMapK<M: Monad>(_ f: FunctionK<F, M>) -> Kind<M, A> {
-        f.liftEvalI().free().invoke(asFree)^.run()
+        
+        f.coyoneda().free().invoke(asFree)^.run()
     }
 }
 
 public postfix func ^<F, A>(_ fa: ProgramOf<F, A>) -> Program<F, A> {
     return Program.fix(fa)
+}
+
+public extension Program where F: Monad {
+    /// Folds this free structure using the same Monad.
+    ///
+    /// - Returns: Folded value.
+    func run() -> Kind<F, A> {
+        self.foldMapK(FunctionK<F, F>.id)
+    }
 }
 
 extension ProgramPartial: Functor {

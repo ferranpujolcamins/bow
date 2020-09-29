@@ -1,12 +1,8 @@
 import Bow
 
 public extension FunctionK where G: Functor {
-    func liftEvalI() -> FunctionK<CoyonedaPartial<F>, G> {
-        { coy in
-        // liftEvalI self (Coyoneda f i) = fmap f (self i)
-//            self.invoke(coy.lower())
-        // TODO: IS THIS RIGHT?
-        }
+    func coyoneda() -> FunctionK<CoyonedaPartial<F>, G> {
+        CoyonedaFunctionK(f: self)
     }
 }
 
