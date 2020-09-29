@@ -18,8 +18,8 @@ open class Yoneda<F, A>: YonedaOf<F, A> {
         return apply(id)
     }
 
-    public func toCoyoneda() -> Coyoneda<F, A, A> {
-        return Coyoneda<F, A, A>.apply(lower(), id)
+    public func toCoyoneda() -> Coyoneda<F, A> {
+        return Coyoneda<F, A>.apply(lower(), id)
     }
 }
 
