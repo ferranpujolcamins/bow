@@ -1,20 +1,40 @@
 import Foundation
 import Bow
 
+public final class ForCoyonedaF {}
+public final class CoyonedaFPartial<F, A>: Kind2<ForCoyonedaF, F, A> {}
+public typealias CoyonedaFOf<F, A, P> = Kind<CoyonedaFPartial<F, A>, P>
+public final class CoyonedaF<F, A, P>: CoyonedaFOf<F, A, P> {
+    init(pivot: Kind<F, P>, f: @escaping (P) -> A) {
+        self.pivot = pivot
+        self.f = f
+    }
+
+    let pivot: Kind<F, P>
+    let f: (P) -> A
+
+    static func fix(_ fa: CoyonedaFOf<F, A, P>) -> CoyonedaF<F, A, P> {
+        fa as! CoyonedaF<F, A, P>
+    }
+}
+
+public postfix func ^<F, A, P>(_ fa: CoyonedaFOf<F, A, P>) -> CoyonedaF<F, A, P> {
+    CoyonedaF.fix(fa)
+}
+
 public final class ForCoyoneda {}
 public final class CoyonedaPartial<F>: Kind<ForCoyoneda, F> {}
 public typealias CoyonedaOf<F, A> = Kind<CoyonedaPartial<F>, A>
 
 public class Coyoneda<F, A>: CoyonedaOf<F, A> {
-    internal let pivot: Kind<F, /*B*/Any>
-    internal let function: (/*B*/Any) -> A
+    internal let coyonedaF: Exists<CoyonedaFPartial<F, A>>
     
-    public init(
-        _ pivot: Kind<F, Any>,
-        _ function: @escaping (Any) -> A
-    ) {
-        self.pivot = pivot
-        self.function = function
+    public init(coyonedaF: Exists<CoyonedaFPartial<F, A>>) {
+        self.coyonedaF = coyonedaF
+    }
+
+    public convenience init<P>(pivot: Kind<F, P>, f: @escaping (P) -> A) {
+        self.init(coyonedaF: Exists(CoyonedaF(pivot: pivot, f: f)))
     }
     
     public static func fix(_ fa: CoyonedaOf<F, A>) -> Coyoneda<F, A> {
@@ -22,13 +42,21 @@ public class Coyoneda<F, A>: CoyonedaOf<F, A> {
     }
 }
 
-public extension Coyoneda where F: Functor {
-    static func liftCoyoneda(_ fa: Kind<F, A>) -> Coyoneda<F, A> {
-        Coyoneda(fa.map { a in a as Any }, { x in x as! A })
+extension Coyoneda {
+    public static func liftCoyoneda(_ fa: Kind<F, A>) -> Coyoneda<F, A> {
+        Coyoneda<F, A>(pivot: fa, f: id)
     }
-    
-    func lower() -> Kind<F, A> {
-        self.pivot.map { a in self.function(a) }
+}
+
+extension Coyoneda where F: Functor {
+    public func lower() -> Kind<F, A> {
+        coyonedaF.run(Lower())
+    }
+
+    private class Lower<F: Functor, A>: CokleisliK<CoyonedaFPartial<F, A>, Kind<F, A>> {
+        public override func invoke<T>(_ fa: CoyonedaFOf<F, A, T>) -> Kind<F, A> {
+            fa^.pivot.map(fa^.f)
+        }
     }
 }
 
@@ -47,7 +75,19 @@ extension CoyonedaPartial: Functor {
         _ fa: CoyonedaOf<F, A>,
         _ f: @escaping (A) -> B
     ) -> CoyonedaOf<F, B> {
-        Coyoneda<F, B>(fa^.pivot, f <<< fa^.function)
+        fa^.coyonedaF.run(Map(f: f))
+    }
+
+    private class Map<F, A, B>: CokleisliK<CoyonedaFPartial<F, A>, CoyonedaOf<F, B>> {
+        internal init(f: @escaping (A) -> B) {
+            self.f = f
+        }
+
+        let f: (A) -> B
+
+        override func invoke<T>(_ fa: CoyonedaFOf<F, A, T>) -> CoyonedaOf<F, B> {
+            Coyoneda(pivot: fa^.pivot, f: f <<< fa^.f)
+        }
     }
 }
 
@@ -63,9 +103,8 @@ extension CoyonedaPartial: Applicative where F: Applicative {
         _ fa: CoyonedaOf<F, A>
     ) -> CoyonedaOf<F, B> {
         Coyoneda.liftCoyoneda(
-            F.map(ff^.pivot, fa^.pivot) { f, a in
-                ff^.function(f)(fa^.function(a))
-            })
+            F.ap(ff^.lower(), fa^.lower())
+        )
     }
 }
 
@@ -80,10 +119,21 @@ extension CoyonedaPartial: Monad where F: Monad {
         _ fa: CoyonedaOf<F, A>,
         _ f: @escaping (A) -> CoyonedaOf<F, B>
     ) -> CoyonedaOf<F, B> {
-        Coyoneda.liftCoyoneda(
-            fa^.pivot.flatMap { x in
-                f(fa^.function(x))^.lower()
-            })
+        fa^.coyonedaF.run(FlatMap(f: f))
+    }
+
+    private class FlatMap<F: Monad, A, B>: CokleisliK<CoyonedaFPartial<F, A>, CoyonedaOf<F, B>> {
+        internal init(f: @escaping (A) -> CoyonedaOf<F, B>) {
+            self.f = f
+        }
+
+        let f: (A) -> CoyonedaOf<F, B>
+
+        override func invoke<T>(_ fa: Kind<CoyonedaFPartial<F, A>, T>) -> CoyonedaOf<F, B> {
+            Coyoneda.liftCoyoneda(
+                F.flatMap(fa^.pivot) { (self.f <<< fa^.f)($0)^.lower() }
+            )
+        }
     }
     
     public static func tailRecM<A, B>(
@@ -106,18 +156,35 @@ extension CoyonedaPartial: Comonad where F: Comonad {
         _ fa: CoyonedaOf<F, A>,
         _ f: @escaping (CoyonedaOf<F, A>) -> B
     ) -> CoyonedaOf<F, B> {
-        Coyoneda(
-            fa^.pivot.coflatMap { x in
-                f(Coyoneda(x, fa^.function))
-            },
-            { x in x as! B }
-        )
+        fa^.coyonedaF.run(CoflatMap(f: f))
+    }
+
+    private class CoflatMap<F: Comonad, A, B>: CokleisliK<CoyonedaFPartial<F, A>, CoyonedaOf<F, B>> {
+        internal init(f: @escaping (CoyonedaOf<F, A>) -> B) {
+            self.f = f
+        }
+
+        let f: (CoyonedaOf<F, A>) -> B
+
+        override func invoke<T>(_ fa: Kind<CoyonedaFPartial<F, A>, T>) -> CoyonedaOf<F, B> {
+            Coyoneda.liftCoyoneda(
+                fa^.pivot.coflatMap { self.f(Coyoneda(pivot: $0, f: fa^.f)) }
+            )
+        }
     }
     
     public static func extract<A>(
         _ fa: CoyonedaOf<F, A>
     ) -> A {
-        fa^.function(fa^.pivot.extract())
+        fa^.coyonedaF.run(Extract())
+    }
+
+    private class Extract<F: Comonad, A>: CokleisliK<CoyonedaFPartial<F, A>, A> {
+        internal override init() {}
+
+        override func invoke<T>(_ fa: Kind<CoyonedaFPartial<F, A>, T>) -> A {
+            fa^.f(fa^.pivot.extract())
+        }
     }
 }
 
@@ -129,8 +196,22 @@ extension CoyonedaPartial: Foldable where F: Foldable {
         _ b: B,
         _ f: @escaping (B, A) -> B
     ) -> B {
-        fa^.pivot.foldLeft(b) { b, any in
-            f(b, fa^.function(any))
+        fa^.coyonedaF.run(FoldLeft(b: b, f: f))
+    }
+
+    private class FoldLeft<F: Foldable, A, B>: CokleisliK<CoyonedaFPartial<F, A>, B> {
+        internal init(b: B, f: @escaping (B, A) -> B) {
+            self.b = b
+            self.f = f
+        }
+
+        let b: B
+        let f: (B, A) -> B
+
+        override func invoke<T>(_ fa: Kind<CoyonedaFPartial<F, A>, T>) -> B {
+            fa^.pivot.foldLeft(b) { b, t in
+                self.f(b, fa^.f(t))
+            }
         }
     }
     
@@ -139,8 +220,22 @@ extension CoyonedaPartial: Foldable where F: Foldable {
         _ b: Eval<B>,
         _ f: @escaping (A, Eval<B>) -> Eval<B>
     ) -> Eval<B> {
-        fa^.pivot.foldRight(b) { any, b in
-            f(fa^.function(any), b)
+        fa^.coyonedaF.run(FoldRight(b: b, f: f))
+    }
+
+    private class FoldRight<F: Foldable, A, B>: CokleisliK<CoyonedaFPartial<F, A>, Eval<B>> {
+        internal init(b: Eval<B>, f: @escaping (A, Eval<B>) -> Eval<B>) {
+            self.b = b
+            self.f = f
+        }
+
+        let b: Eval<B>
+        let f: (A, Eval<B>) -> Eval<B>
+
+        override func invoke<T>(_ fa: Kind<CoyonedaFPartial<F, A>, T>) -> Eval<B> {
+            fa^.pivot.foldRight(b) { t, b in
+                self.f(fa^.f(t), b)
+            }
         }
     }
 }
@@ -152,7 +247,19 @@ extension CoyonedaPartial: Traverse where F: Traverse {
         _ fa: CoyonedaOf<F, A>,
         _ f: @escaping (A) -> Kind<G, B>
     ) -> Kind<G, CoyonedaOf<F, B>> {
-        fa^.pivot.traverse(f <<< fa^.function)
-            .map(Coyoneda.liftCoyoneda)
+        fa^.coyonedaF.run(TraverseF(f: f))
+    }
+
+    private class TraverseF<F: Traverse, G: Applicative, A, B>: CokleisliK<CoyonedaFPartial<F, A>, Kind<G, CoyonedaOf<F, B>>> {
+        internal init(f: @escaping (A) -> Kind<G, B>) {
+            self.f = f
+        }
+
+        let f: (A) -> Kind<G, B>
+
+        override func invoke<T>(_ fa: Kind<CoyonedaFPartial<F, A>, T>) -> Kind<G, CoyonedaOf<F, B>> {
+            fa^.pivot.traverse(f <<< fa^.f)
+                .map(Coyoneda.liftCoyoneda)
+        }
     }
 }

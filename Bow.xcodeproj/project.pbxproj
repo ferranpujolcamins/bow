@@ -362,6 +362,7 @@
 		B55BE657252332BA005297CA /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55BE656252332BA005297CA /* Program.swift */; };
 		B55BE68525234AD1005297CA /* ProgramTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55BE68425234AD1005297CA /* ProgramTest.swift */; };
 		B55F52B225247256001979EE /* ExistsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55F52B125247256001979EE /* ExistsTests.swift */; };
+		B56A08632525C39600869FCD /* CokleisliK.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56A08622525C39600869FCD /* CokleisliK.swift */; };
 		B8B910C0234D7F2600E44271 /* Semiring.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B910BF234D7F2600E44271 /* Semiring.swift */; };
 		B8B910C4234D846900E44271 /* SemiringLaws.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B910C3234D846900E44271 /* SemiringLaws.swift */; };
 		B8B910C6234DDA4000E44271 /* BoolInstancesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B910C5234DDA4000E44271 /* BoolInstancesTest.swift */; };
@@ -1231,6 +1232,7 @@
 		B55BE656252332BA005297CA /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		B55BE68425234AD1005297CA /* ProgramTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgramTest.swift; sourceTree = "<group>"; };
 		B55F52B125247256001979EE /* ExistsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExistsTests.swift; sourceTree = "<group>"; };
+		B56A08622525C39600869FCD /* CokleisliK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CokleisliK.swift; sourceTree = "<group>"; };
 		B8B910BF234D7F2600E44271 /* Semiring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Semiring.swift; sourceTree = "<group>"; };
 		B8B910C3234D846900E44271 /* SemiringLaws.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiringLaws.swift; sourceTree = "<group>"; };
 		B8B910C5234DDA4000E44271 /* BoolInstancesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolInstancesTest.swift; sourceTree = "<group>"; };
@@ -1970,6 +1972,7 @@
 				8BA0F446217E2E9200969984 /* Function1.swift */,
 				8BA0F443217E2E9200969984 /* FunctionK.swift */,
 				8BA0F444217E2E9200969984 /* Kleisli.swift */,
+				B56A08622525C39600869FCD /* CokleisliK.swift */,
 			);
 			path = Arrow;
 			sourceTree = "<group>";
@@ -3342,6 +3345,7 @@
 				8BA0F5BB217E2E9200969984 /* Validated.swift in Sources */,
 				8BA0F62F217E2E9200969984 /* Bimonad.swift in Sources */,
 				8BA0F627217E2E9200969984 /* Foldable.swift in Sources */,
+				B56A08632525C39600869FCD /* CokleisliK.swift in Sources */,
 				8BA0F587217E2E9200969984 /* DictionaryK.swift in Sources */,
 				B8B910C0234D7F2600E44271 /* Semiring.swift in Sources */,
 			);
