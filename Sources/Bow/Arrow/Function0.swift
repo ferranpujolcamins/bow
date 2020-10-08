@@ -85,15 +85,20 @@ extension Function0Partial: Monad {
         f(fa^.f())
     }
 
-    private static func loop<A, B>(_ a: A, _ f: @escaping (A) -> Function0Of<Either<A, B>>) -> Trampoline<B> {
-        .defer {
-            f(a)^.extract().fold({ a in loop(a, f) },
-                                 { b in .done(b) })
-        }
-    }
-
     public static func tailRecM<A, B>(_ a: A, _ f: @escaping (A) -> Function0Of<Either<A, B>>) -> Function0Of<B> {
-        Function0<B>({ loop(a, f).run() })
+        // We can't use Trampoline here, because Trampoline internally uses Function0 and that would cause and endless loop of calls to
+        // Trampoline.run
+        Function0<B> {
+            var a = a
+            while true {
+                let x = f(a)^.invoke()
+                if let b = x.toOption().orNil {
+                    return b
+                } else {
+                    a = x.leftValue
+                }
+            }
+        }
     }
 }
 
