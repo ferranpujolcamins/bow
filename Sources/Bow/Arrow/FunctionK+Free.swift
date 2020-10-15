@@ -1,5 +1,3 @@
-import Bow
-
 public extension FunctionK where F: Functor, G: Functor {
     /// Obtains a natural transformation for the Free Monads of the Functors from this natural transformation.
     ///

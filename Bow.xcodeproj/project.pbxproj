@@ -76,7 +76,6 @@
 		11229438219D8BDE006D66C5 /* CustomStringConvertibleLaws.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F3D1217E2DEF00969984 /* CustomStringConvertibleLaws.swift */; };
 		11229439219D8BDE006D66C5 /* TraverseFilterLaws.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F3D3217E2DEF00969984 /* TraverseFilterLaws.swift */; };
 		1122943A219D8BDE006D66C5 /* TraverseLaws.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F3BB217E2DEF00969984 /* TraverseLaws.swift */; };
-		1122947F219D8E25006D66C5 /* FreeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F38D217E2DEF00969984 /* FreeTest.swift */; };
 		112294F3219D8FAE006D66C5 /* Recursion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F452217E2E9200969984 /* Recursion.swift */; };
 		112294F4219D8FAE006D66C5 /* Fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F455217E2E9200969984 /* Fix.swift */; };
 		112294F5219D8FAE006D66C5 /* Mu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F456217E2E9200969984 /* Mu.swift */; };
@@ -154,7 +153,6 @@
 		117DC0F222AE4E1C00EF65F0 /* SingleK+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117DC0F122AE4E1C00EF65F0 /* SingleK+Gen.swift */; };
 		117DC0F422AE4F3500EF65F0 /* MaybeK+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117DC0F322AE4F3500EF65F0 /* MaybeK+Gen.swift */; };
 		117DC0F622AE504500EF65F0 /* ObservableK+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117DC0F522AE504500EF65F0 /* ObservableK+Gen.swift */; };
-		117DC13722AE578A00EF65F0 /* Free+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117DC13622AE578A00EF65F0 /* Free+Gen.swift */; };
 		1186E15122BA395D001F8A5D /* Index+Optics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1186E14E22BA38CD001F8A5D /* Index+Optics.swift */; };
 		1186E15722BA8A77001F8A5D /* Cons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1186E15622BA8A77001F8A5D /* Cons.swift */; };
 		1186E15922BA8ECA001F8A5D /* Snoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1186E15822BA8ECA001F8A5D /* Snoc.swift */; };
@@ -184,7 +182,6 @@
 		11BA21C523D83EA100F3EE78 /* Zipper+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1171ED5F23C636A9005362E0 /* Zipper+Gen.swift */; };
 		11D36A19223261EC00CBD85F /* Selective.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D36A18223261EC00CBD85F /* Selective.swift */; };
 		11D36A1C2232789900CBD85F /* SelectiveLaws.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D36A1A2232787A00CBD85F /* SelectiveLaws.swift */; };
-		11D894FC251CEB58006A65EC /* FunctionK+Free.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D894FB251CEB58006A65EC /* FunctionK+Free.swift */; };
 		11D8967D2523763A006A65EC /* Cofree+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D8967C2523763A006A65EC /* Cofree+Gen.swift */; };
 		11D896C325237A6D006A65EC /* Yoneda+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D896C225237A6D006A65EC /* Yoneda+Gen.swift */; };
 		11D97EF2219EBC0F008FC004 /* AsyncLaws.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F3A2217E2DEF00969984 /* AsyncLaws.swift */; };
@@ -236,7 +233,6 @@
 		11E71810219D7ECC00B94845 /* TraversalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F3E2217E2DEF00969984 /* TraversalTest.swift */; };
 		11E7188E219D82BD00B94845 /* Cofree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F440217E2E9200969984 /* Cofree.swift */; };
 		11E7188F219D82BD00B94845 /* Coyoneda.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F43F217E2E9200969984 /* Coyoneda.swift */; };
-		11E71890219D82BD00B94845 /* Free.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F441217E2E9200969984 /* Free.swift */; };
 		11E71891219D82BD00B94845 /* Yoneda.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F43E217E2E9200969984 /* Yoneda.swift */; };
 		11E7F5ED22D8C83800C78F06 /* Eval+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E7F5EB22D8C81B00C78F06 /* Eval+Gen.swift */; };
 		11E8E07A2395580F0029BC92 /* Array+TraverseConcurrent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E8E0792395580F0029BC92 /* Array+TraverseConcurrent.swift */; };
@@ -364,6 +360,10 @@
 		8BB969AD2398661D005520D6 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB969AB239863F0005520D6 /* Queue.swift */; };
 		B507D2BE252A347A002541E4 /* CoyonedaNaturalTransformationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B507D290252A315C002541E4 /* CoyonedaNaturalTransformationTests.swift */; };
 		B53F8C09251A5F8000468947 /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53F8C08251A5F8000468947 /* Tree.swift */; };
+		B558FD2E25389E8000790229 /* Free.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F441217E2E9200969984 /* Free.swift */; };
+		B558FD4525389E8800790229 /* FunctionK+Free.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D894FB251CEB58006A65EC /* FunctionK+Free.swift */; };
+		B558FD5C25389E9B00790229 /* Free+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 117DC13622AE578A00EF65F0 /* Free+Gen.swift */; };
+		B558FD7325389EAC00790229 /* FreeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F38D217E2DEF00969984 /* FreeTest.swift */; };
 		B5618757252CC2D2002717B1 /* TreeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5618756252CC2D2002717B1 /* TreeTest.swift */; };
 		B5618785252CC3EA002717B1 /* Tree+Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5618784252CC3EA002717B1 /* Tree+Gen.swift */; };
 		B568E5BF2529D1A200AD334B /* FunctionK+Coyoneda.swift in Sources */ = {isa = PBXBuildFile; fileRef = B568E5BE2529D1A200AD334B /* FunctionK+Coyoneda.swift */; };
@@ -1459,6 +1459,7 @@
 				112097CD22A81BE8007F3D9C /* EitherK+Gen.swift */,
 				720C1E0023FD8079001C5B7D /* Endo+Gen.swift */,
 				11E7F5EB22D8C81B00C78F06 /* Eval+Gen.swift */,
+				117DC13622AE578A00EF65F0 /* Free+Gen.swift */,
 				112097B422A7F21F007F3D9C /* Id+Gen.swift */,
 				112097B822A7FAF6007F3D9C /* Ior+Gen.swift */,
 				112097D122A8FFC0007F3D9C /* Moore+Gen.swift */,
@@ -1665,7 +1666,6 @@
 			children = (
 				11D8967C2523763A006A65EC /* Cofree+Gen.swift */,
 				11B6FD7C2525C37F00A5AD54 /* CoyonedaGen.swift */,
-				117DC13622AE578A00EF65F0 /* Free+Gen.swift */,
 				11D896C225237A6D006A65EC /* Yoneda+Gen.swift */,
 			);
 			path = BowFreeGenerators;
@@ -1766,8 +1766,6 @@
 			children = (
 				8BA0F440217E2E9200969984 /* Cofree.swift */,
 				8BA0F43F217E2E9200969984 /* Coyoneda.swift */,
-				8BA0F441217E2E9200969984 /* Free.swift */,
-				11D894FB251CEB58006A65EC /* FunctionK+Free.swift */,
 				B568E5BE2529D1A200AD334B /* FunctionK+Coyoneda.swift */,
 				8BA0F43E217E2E9200969984 /* Yoneda.swift */,
 			);
@@ -1779,7 +1777,6 @@
 			children = (
 				11D8967E25237642006A65EC /* CofreeTest.swift */,
 				11B6FDAA2525C47600A5AD54 /* CoyonedaTest.swift */,
-				8BA0F38D217E2DEF00969984 /* FreeTest.swift */,
 				11D896C525237A7D006A65EC /* YonedaTest.swift */,
 				B507D290252A315C002541E4 /* CoyonedaNaturalTransformationTests.swift */,
 			);
@@ -1960,6 +1957,7 @@
 				720C1E0323FD80AB001C5B7D /* EndoTest.swift */,
 				B55F52B125247256001979EE /* ExistsTests.swift */,
 				8BA0F3AF217E2DEF00969984 /* EvalTest.swift */,
+				8BA0F38D217E2DEF00969984 /* FreeTest.swift */,
 				8BA0F3B0217E2DEF00969984 /* IdTest.swift */,
 				8BA0F3B2217E2DEF00969984 /* IorTest.swift */,
 				8BA0F3AA217E2DEF00969984 /* MooreTest.swift */,
@@ -2000,6 +1998,7 @@
 				8BA0F446217E2E9200969984 /* Function1.swift */,
 				B5BF5085252B0F4A0060AD0D /* LazyFunction1.swift */,
 				8BA0F443217E2E9200969984 /* FunctionK.swift */,
+				11D894FB251CEB58006A65EC /* FunctionK+Free.swift */,
 				8BA0F444217E2E9200969984 /* Kleisli.swift */,
 				B56A08622525C39600869FCD /* CokleisliK.swift */,
 			);
@@ -2085,6 +2084,7 @@
 				720C1DFE23FD804E001C5B7D /* Endo.swift */,
 				B52120FE2523AC2300705BCD /* Exists.swift */,
 				8BA0F47E217E2E9200969984 /* Eval.swift */,
+				8BA0F441217E2E9200969984 /* Free.swift */,
 				8BA0F475217E2E9200969984 /* Id.swift */,
 				8BA0F477217E2E9200969984 /* Ior.swift */,
 				8BA0F47D217E2E9200969984 /* Moore.swift */,
@@ -2878,6 +2878,7 @@
 				1171ED5423C4E4B0005362E0 /* TracedT+Gen.swift in Sources */,
 				112097D822A90644007F3D9C /* Kleisli+Gen.swift in Sources */,
 				720C1E0223FD808F001C5B7D /* Endo+Gen.swift in Sources */,
+				B558FD5C25389E9B00790229 /* Free+Gen.swift in Sources */,
 				112097BB22A7FC86007F3D9C /* NonEmptyArray+Gen.swift in Sources */,
 				112097D622A904AC007F3D9C /* Sum+Gen.swift in Sources */,
 				112097C522A805CE007F3D9C /* Function0+Gen.swift in Sources */,
@@ -2959,7 +2960,6 @@
 			files = (
 				B507D2BE252A347A002541E4 /* CoyonedaNaturalTransformationTests.swift in Sources */,
 				11B6FDC22525C48200A5AD54 /* CofreeTest.swift in Sources */,
-				1122947F219D8E25006D66C5 /* FreeTest.swift in Sources */,
 				11B6FDAB2525C47600A5AD54 /* CoyonedaTest.swift in Sources */,
 				11B6FDEF2525C49000A5AD54 /* YonedaTest.swift in Sources */,
 			);
@@ -3111,7 +3111,6 @@
 				11B6FD7D2525C37F00A5AD54 /* CoyonedaGen.swift in Sources */,
 				11D896C325237A6D006A65EC /* Yoneda+Gen.swift in Sources */,
 				11D8967D2523763A006A65EC /* Cofree+Gen.swift in Sources */,
-				117DC13722AE578A00EF65F0 /* Free+Gen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3214,9 +3213,7 @@
 				11E7188E219D82BD00B94845 /* Cofree.swift in Sources */,
 				11E7188F219D82BD00B94845 /* Coyoneda.swift in Sources */,
 				B568E5BF2529D1A200AD334B /* FunctionK+Coyoneda.swift in Sources */,
-				11E71890219D82BD00B94845 /* Free.swift in Sources */,
 				11E71891219D82BD00B94845 /* Yoneda.swift in Sources */,
-				11D894FC251CEB58006A65EC /* FunctionK+Free.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3263,6 +3260,7 @@
 				8BA0F400217E2DEF00969984 /* EitherTest.swift in Sources */,
 				8BA0F408217E2DEF00969984 /* ValidatedTest.swift in Sources */,
 				111F84FE234DC00F003FE646 /* SetTest.swift in Sources */,
+				B558FD7325389EAC00790229 /* FreeTest.swift in Sources */,
 				8BA0F3EB217E2DEF00969984 /* Function1Test.swift in Sources */,
 				8BA0F3EC217E2DEF00969984 /* Function0Test.swift in Sources */,
 				8BA0F3F0217E2DEF00969984 /* WriterTTest.swift in Sources */,
@@ -3339,6 +3337,7 @@
 				8BA0F5BF217E2E9200969984 /* Coreader.swift in Sources */,
 				1171ED4B23C48985005362E0 /* StoreT.swift in Sources */,
 				B568E5EC2529DCC200AD334B /* Exists.swift in Sources */,
+				B558FD4525389E8800790229 /* FunctionK+Free.swift in Sources */,
 				118C35DD240E5C2200113C66 /* CoSum.swift in Sources */,
 				11DDCD23217F1E2B00844D9D /* Reverse.swift in Sources */,
 				609CC1472364F9A200096D5D /* Divisible.swift in Sources */,
@@ -3355,6 +3354,7 @@
 				606B29EA23607607002334B2 /* Divide.swift in Sources */,
 				8BA0F5AF217E2E9200969984 /* Try.swift in Sources */,
 				8BA0F62B217E2E9200969984 /* NonEmptyReducible.swift in Sources */,
+				B558FD2E25389E8000790229 /* Free.swift in Sources */,
 				8BA0F503217E2E9200969984 /* BooleanFunctions.swift in Sources */,
 				8BA0F4F3217E2E9200969984 /* Function1.swift in Sources */,
 				115488D123BFA0CC00A6DE92 /* EnvT.swift in Sources */,

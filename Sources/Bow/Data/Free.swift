@@ -1,5 +1,4 @@
 import Foundation
-import Bow
 
 /// Witness for the `Free<F, A>` data type. To be used in simulated Higher Kinded Types.
 public final class ForFree {}

@@ -1,7 +1,5 @@
 import XCTest
 import Bow
-import BowFree
-import BowFreeGenerators
 import BowLaws
 
 fileprivate final class ForOpsF {}
