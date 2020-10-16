@@ -5,7 +5,7 @@ import SwiftCheck
 
 extension Trampoline: Arbitrary where A: Arbitrary {
     public static var arbitrary: Gen<Trampoline<A>> {
-        Free<Function0Partial, A>.arbitrary.map(Trampoline.init)
+        Free<LazyFunction0Partial, A>.arbitrary.map(Trampoline.init)
     }
 }
 

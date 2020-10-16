@@ -120,6 +120,7 @@ extension CoyonedaPartial: Functor {
         let f: (A) -> B
 
         override func invoke<T>(_ fa: CoyonedaFOf<F, A, T>) -> CoyonedaOf<F, B> {
+            // TODO: is this right????
             Coyoneda(pivot: fa^.pivot, f: f <<< fa^.f.invoke)
         }
     }

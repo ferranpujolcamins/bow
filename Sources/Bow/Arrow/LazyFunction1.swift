@@ -63,6 +63,7 @@ public final class LazyFunction1<I, O>: LazyFunction1Of<I, O> {
     /// - Parameter f: Function to compose.
     /// - Returns: Composition of the two functions.
     public func compose<A>(_ f: LazyFunction1<A, I>) -> LazyFunction1<A, O> {
+        // TODO: is this right??? add tests
         LazyFunction1<A, O>(f.functions + functions)
     }
 
@@ -79,6 +80,7 @@ public final class LazyFunction1<I, O>: LazyFunction1Of<I, O> {
     /// - Parameter f: Function to compose.
     /// - Returns: Composition of the two functions.
     public func contramap<A>(_ f: @escaping (A) -> I) -> LazyFunction1<A, O> {
+        // TODO: is this right??? add tests
         compose(LazyFunction1<A, I>(f))
     }
 }

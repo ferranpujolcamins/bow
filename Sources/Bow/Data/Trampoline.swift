@@ -9,11 +9,12 @@ public typealias TrampolineOf<A> = Kind<ForTrampoline, A>
 
 /// The Trampoline type helps us overcome stack safety issues of recursive calls by transforming them into loops.
 public final class Trampoline<A>: TrampolineOf<A> {
-    init(_ value: Free<Function0Partial, A>) {
+    // TODO: this can probably also be expressed as Program<Function0Partial, A>
+    init(_ value: Free<LazyFunction0Partial, A>) {
         self.value = value
     }
 
-    fileprivate let value: Free<Function0Partial, A>
+    fileprivate let value: Free<LazyFunction0Partial, A>
     /// Creates a Trampoline that does not need to recurse and provides the final result.
     ///
     /// - Parameter value: Result of the computation.
@@ -27,7 +28,7 @@ public final class Trampoline<A>: TrampolineOf<A> {
     /// - Parameter f: Function describing the recursive step.
     /// - Returns: A Trampoline that describes a recursive step.
     public static func `defer`(_ f: @escaping () -> Trampoline<A>) -> Trampoline<A> {
-        Trampoline(.free(Function0({ f().value })))
+        Trampoline(.free(LazyFunction0({ f().value })))
     }
     
     /// Creates a Trampoline that performs a computation in a moment in the future.
@@ -35,7 +36,7 @@ public final class Trampoline<A>: TrampolineOf<A> {
     /// - Parameter f: Function to compute the value wrapped in this Trampoline.
     /// - Returns: A Trampoline that delays the obtention of a value and stops recursing.
     public static func later(_ f: @escaping () -> A) -> Trampoline<A> {
-        Trampoline(.liftF(Function0(f)))
+        Trampoline(.liftF(LazyFunction0(f)))
     }
     
     /// Executes the computations described by this Trampoline by converting it into a loop.
