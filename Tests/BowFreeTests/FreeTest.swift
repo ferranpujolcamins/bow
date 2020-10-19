@@ -4,62 +4,62 @@ import BowFree
 import BowFreeGenerators
 import BowLaws
 
-fileprivate final class ForOpsF {}
-fileprivate typealias OpsFPartial = ForOpsF
-fileprivate typealias OpsFOf<A> = Kind<ForOpsF, A>
+fileprivate final class ForReadWriteF {}
+fileprivate typealias ReadWriteFPartial = ForReadWriteF
+fileprivate typealias ReadWriteFOf<A> = Kind<ForReadWriteF, A>
 
-fileprivate class OpsF<A>: OpsFOf<A> {
-    enum _OpsF {
+fileprivate class ReadWriteF<A>: ReadWriteFOf<A> {
+    enum _ReadWriteF {
         case read((String) -> A)
         case write(String, A)
     }
     
-    let value: _OpsF
+    let value: _ReadWriteF
     
-    private init(_ value: _OpsF) {
+    private init(_ value: _ReadWriteF) {
         self.value = value
     }
     
-    static func read(_ callback: @escaping (String) -> A) -> OpsF<A> {
-        OpsF(.read(callback))
+    static func read(_ callback: @escaping (String) -> A) -> ReadWriteF<A> {
+        ReadWriteF(.read(callback))
     }
     
-    static func write(_ content: String, _ next: A) -> OpsF<A> {
-        OpsF(.write(content, next))
+    static func write(_ content: String, _ next: A) -> ReadWriteF<A> {
+        ReadWriteF(.write(content, next))
     }
 }
 
-fileprivate postfix func ^<A>(_ value: OpsFOf<A>) -> OpsF<A> {
-    value as! OpsF<A>
+fileprivate postfix func ^<A>(_ value: ReadWriteFOf<A>) -> ReadWriteF<A> {
+    value as! ReadWriteF<A>
 }
 
-extension OpsFPartial: Functor {
+extension ReadWriteFPartial: Functor {
     static func map<A, B>(
-        _ fa: OpsFOf<A>,
+        _ fa: ReadWriteFOf<A>,
         _ f: @escaping (A) -> B
-    ) -> OpsFOf<B> {
+    ) -> ReadWriteFOf<B> {
         switch fa^.value {
         
         case .read(let callback):
-            return OpsF.read(callback >>> f)
+            return ReadWriteF.read(callback >>> f)
         case .write(let content, let next):
-            return OpsF.write(content, f(next))
+            return ReadWriteF.write(content, f(next))
         }
     }
 }
 
-fileprivate typealias Ops<A> = Free<OpsFPartial, A>
+fileprivate typealias ReadWrite<A> = Free<ReadWriteFPartial, A>
 
-fileprivate func read() -> Ops<String> {
-    Ops.liftF(OpsF.read(id))
+fileprivate func read() -> ReadWrite<String> {
+    ReadWrite.liftF(ReadWriteF.read(id))
 }
 
-fileprivate func write(content: String) -> Ops<Void> {
-    Ops.liftF(OpsF.write(content, ()))
+fileprivate func write(content: String) -> ReadWrite<Void> {
+    ReadWrite.liftF(ReadWriteF.write(content, ()))
 }
 
-fileprivate func program() -> Ops<Void> {
-    let name = Ops<String>.var()
+fileprivate func program() -> ReadWrite<Void> {
+    let name = ReadWrite<String>.var()
     
     return binding(
         |<-write(content: "What's your name?"),
@@ -69,10 +69,10 @@ fileprivate func program() -> Ops<Void> {
     )^
 }
 
-fileprivate class StateInterpreter: FunctionK<OpsFPartial, StatePartial<([String], [String])>> {
+fileprivate class StateInterpreter: FunctionK<ReadWriteFPartial, StatePartial<([String], [String])>> {
     
     override func invoke<A>(
-        _ fa: OpsFOf<A>
+        _ fa: ReadWriteFOf<A>
     ) -> StateOf<([String], [String]), A> {
         switch fa^.value {
         
