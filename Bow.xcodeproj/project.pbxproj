@@ -356,6 +356,7 @@
 		8BA0F65B217E2E9200969984 /* FunctorFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA0F4AE217E2E9200969984 /* FunctorFilter.swift */; };
 		8BB969AD2398661D005520D6 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB969AB239863F0005520D6 /* Queue.swift */; };
 		B53976272540113100D8ECB8 /* HashableK.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53976262540113100D8ECB8 /* HashableK.swift */; };
+		B52AE7C1253F0A43009FC01F /* HeterogeneousTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52AE7C0253F0A43009FC01F /* HeterogeneousTree.swift */; };
 		B53976552540116A00D8ECB8 /* HashableKLaws.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53976542540116A00D8ECB8 /* HashableKLaws.swift */; };
 		B53F8C09251A5F8000468947 /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53F8C08251A5F8000468947 /* Tree.swift */; };
 		B558FBDE25385D7F00790229 /* CoyonedaTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B6FDAA2525C47600A5AD54 /* CoyonedaTest.swift */; };
@@ -1254,6 +1255,7 @@
 		B507D290252A315C002541E4 /* CoyonedaNaturalTransformationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoyonedaNaturalTransformationTests.swift; sourceTree = "<group>"; };
 		B52120FE2523AC2300705BCD /* Exists.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exists.swift; sourceTree = "<group>"; };
 		B53976262540113100D8ECB8 /* HashableK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableK.swift; sourceTree = "<group>"; };
+		B52AE7C0253F0A43009FC01F /* HeterogeneousTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeterogeneousTree.swift; sourceTree = "<group>"; };
 		B53976542540116A00D8ECB8 /* HashableKLaws.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HashableKLaws.swift; sourceTree = "<group>"; };
 		B53F8C08251A5F8000468947 /* Tree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
 		B55BE656252332BA005297CA /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
@@ -2127,6 +2129,7 @@
 				8BA0F484217E2E9200969984 /* Validated.swift */,
 				8BA0F43E217E2E9200969984 /* Yoneda.swift */,
 				1171ED5D23C62C5E005362E0 /* Zipper.swift */,
+				B52AE7C0253F0A43009FC01F /* HeterogeneousTree.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -3391,6 +3394,7 @@
 				B57738FD252F21CC003B3EBF /* Coyoneda.swift in Sources */,
 				8BA0F62B217E2E9200969984 /* NonEmptyReducible.swift in Sources */,
 				8BA0F503217E2E9200969984 /* BooleanFunctions.swift in Sources */,
+				B52AE7C1253F0A43009FC01F /* HeterogeneousTree.swift in Sources */,
 				8BA0F4F3217E2E9200969984 /* Function1.swift in Sources */,
 				B53976272540113100D8ECB8 /* HashableK.swift in Sources */,
 				115488D123BFA0CC00A6DE92 /* EnvT.swift in Sources */,

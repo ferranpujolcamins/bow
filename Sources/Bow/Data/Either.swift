@@ -91,6 +91,11 @@ public final class Either<A, B>: EitherOf<A, B> {
         fold({ _ in fatalError("Attempted to obtain rightValue on a left instance") }, id)
     }
 
+    /// Returns the value of the left type, or `nil` if it is a right value.
+    public var leftOrNil: A? {
+        fold(id, constant(nil))
+    }
+
     /// Returns the value of the right type, or `nil` if it is a left value.
     public var orNil: B? {
         fold(constant(nil), id)
