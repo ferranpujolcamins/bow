@@ -32,6 +32,11 @@ class EitherTTest: XCTestCase {
         MonadTransLaws<EitherTPartial<ForId, Int>, String, Int>.check()
         MonadTransLaws<EitherTPartial<ForOption, Int>, String, Int>.check()
     }
+
+    func testMonadTransLaws() {
+        MonadTransLaws<EitherTPartial<ForId, Int>>.check()
+        MonadTransLaws<EitherTPartial<ForOption, Int>>.check()
+    }
     
     func testApplicativeErrorLaws() {
         ApplicativeErrorLaws<EitherTPartial<EitherPartial<CategoryError>, Int>>.check()

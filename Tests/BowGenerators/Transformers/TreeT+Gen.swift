@@ -3,24 +3,24 @@ import Bow
 import SwiftCheck
 
 // MARK: Generator for Property-based Testing
-extension Tree: Arbitrary where A: Arbitrary {
-    public static var arbitrary: Gen<Tree<A>> {
+extension TreeT: Arbitrary where F: ArbitraryK, A: Arbitrary {
+    public static var arbitrary: Gen<TreeT<F, A>> {
         Gen.sized { gen(size: UInt($0)) }
     }
 
-    private static func gen(size: UInt) -> Gen<Tree<A>> {
+    private static func gen(size: UInt) -> Gen<TreeT<F, A>> {
         let subForests = (size > 0)
             ? (size-1).arbitratyPartition.flatMap { SwiftCheck.sequence($0.map(gen)) }
             : .pure([])
-        return Gen.zip(A.arbitrary, subForests)
-            .map(Tree.init)
+        return Gen.zip(KindOf<F, A>.arbitrary.map { $0.value }, subForests)
+            .map(TreeT.init)
     }
 }
 
 // MARK: Instance of ArbitraryK for Tree
-extension TreePartial: ArbitraryK {
-    public static func generate<A: Arbitrary>() -> TreeOf<A> {
-        Tree.arbitrary.generate
+extension TreeTPartial: ArbitraryK where F: ArbitraryK {
+    public static func generate<A: Arbitrary>() -> TreeTOf<F, A> {
+        TreeT.arbitrary.generate
     }
 }
 

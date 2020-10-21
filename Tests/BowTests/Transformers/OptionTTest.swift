@@ -32,6 +32,11 @@ class OptionTTest: XCTestCase {
         MonadTransLaws<OptionTPartial<ForId>, String, Int>.check()
         MonadTransLaws<OptionTPartial<ForOption>, String, Int>.check()
     }
+
+    func testMonadTransLaws() {
+        MonadTransLaws<OptionTPartial<ForId>>.check()
+        MonadTransLaws<OptionTPartial<ForOption>>.check()
+    }
     
     func testSemigroupKLaws() {
         SemigroupKLaws<OptionTPartial<ForId>>.check()
