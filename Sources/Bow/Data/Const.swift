@@ -46,9 +46,9 @@ public postfix func ^<A, T>(_ fa: ConstOf<A, T>) -> Const<A, T> {
 }
 
 // MARK: Conformance to CustomStringConvertible
-extension Const: CustomStringConvertible {
-    public var description : String {
-        "Const(\(value))"
+extension ConstPartial: CustomStringConvertibleK where A: CustomStringConvertible{
+    public static func description<B>(of fa: ConstOf<A, B>) -> String where A : CustomStringConvertible {
+        "Const(\(fa^.value))"
     }
 }
 

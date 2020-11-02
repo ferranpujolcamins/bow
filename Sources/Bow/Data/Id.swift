@@ -39,9 +39,9 @@ public postfix func ^<A>(_ fa: IdOf<A>) -> Id<A> {
 }
 
 // MARK: Conformance of Id to CustomStringConvertible.
-extension Id: CustomStringConvertible {
-    public var description: String {
-        "Id(\(value))"
+extension IdPartial: CustomStringConvertibleK {
+    public static func description<A>(of fa: IdOf<A>) -> String where A : CustomStringConvertible {
+        "Id(\(fa^.value))"
     }
 }
 

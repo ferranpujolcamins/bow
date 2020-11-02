@@ -136,9 +136,9 @@ public postfix func ^<A>(_ fa: OptionOf<A>) -> Option<A> {
 }
 
 // MARK: Conformance of Option to CustomStringConvertible
-extension Option: CustomStringConvertible {
-    public var description: String {
-        fold({ "None" },
+extension OptionPartial: CustomStringConvertibleK {
+    public static func description<A>(of fa: OptionOf<A>) -> String where A : CustomStringConvertible {
+        fa^.fold({ "None" },
              { a in "Some(\(a))" })
     }
 }

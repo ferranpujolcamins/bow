@@ -193,9 +193,9 @@ extension _Ior: Equatable where A: Equatable, B: Equatable {}
 extension _Ior: Hashable where A: Hashable, B: Hashable {}
 
 // MARK: Conformance to CustomStringConvertible
-extension Ior: CustomStringConvertible {
-    public var description: String {
-        fold({ a in "Left(\(a))" },
+extension IorPartial: CustomStringConvertibleK where L: CustomStringConvertible {
+    public static func description<A>(of fa: IorOf<L, A>) -> String where A : CustomStringConvertible {
+        fa^.fold({ a in "Left(\(a))" },
              { b in "Right(\(b))" },
              { a, b in "Both(\(a),\(b))" })
     }

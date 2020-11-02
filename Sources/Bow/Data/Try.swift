@@ -195,9 +195,9 @@ private enum _Try<A> {
 }
 
 // MARK: Conformance of Try to CustomStringConvertible
-extension Try: CustomStringConvertible where A: CustomStringConvertible {
-    public var description : String {
-        fold({ error in "Failure(\(error))" },
+extension TryPartial: CustomStringConvertibleK {
+    public static func description<A>(of fa: TryOf<A>) -> String where A : CustomStringConvertible {
+        fa^.fold({ error in "Failure(\(error))" },
              { value in "Success(\(value.description))" })
     }
 }
