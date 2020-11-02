@@ -163,7 +163,10 @@ public extension Monad {
             w.fold({
                 map(fa) { .left(.some($0)) }
             }) { i in
-                map(f(i)) { .right($0) }
+                map(f(i)) { a in
+                    print(a)
+                        return .right(a)
+                }
             }
         }
     }

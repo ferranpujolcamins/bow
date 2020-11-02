@@ -84,6 +84,16 @@ public postfix func ^<F, A>(_ fa: TreeTOf<F, A>) -> TreeT<F, A> {
     TreeT.fix(fa)
 }
 
+// MARK: Instance of CustomStringConvertibleK for TreeT
+extension TreeTPartial {
+    public static func description<A>(of value: Kind<TreeTPartial, A>) -> String {
+        if let r = value^.root as? Id<A> {
+        return "\(r) -<\n" +
+            value^.subForest.flatMap { "    \($0)\n" }
+        } else { return "" }
+    }
+}
+
 // MARK: Instance of EquatableK for TreeT
 extension TreeTPartial: EquatableK where F: EquatableK {
     public static func eq<A>(_ lhs: TreeTOf<F, A>, _ rhs: TreeTOf<F, A>) -> Bool where A : Equatable {
@@ -122,14 +132,15 @@ extension TreeTPartial: Applicative where F: Applicative {
 }
 
 // MARK: Instance of Selective for TreeT
-extension TreeTPartial: Selective where F: Monad {}
+extension TreeTPartial: Selective where F: Monad & Traverse {}
 
 // MARK: Instance of Monad for Tree
-extension TreeTPartial: Monad where F: Monad {
+// TODO: can we relax traverse requirement?
+extension TreeTPartial: Monad where F: Monad & Traverse {
     public static func flatMap<A, B>(_ fa: TreeTOf<F, A>, _ f: @escaping (A) -> TreeTOf<F, B>) -> TreeTOf<F, B> {
-        f(fa^.root)^.appendSubForest(
-            fa^.subForest.map { TreeTPartial.flatMap($0, f)^ }
-        )
+        print("------")
+        print("\(TreeTPartial.description(of: fa)):")
+        return stackSafeFlatMap(fa, f)
     }
 
     public static func tailRecM<A, B>(_ a: A, _ f: @escaping (A) -> TreeTOf<F, Either<A, B>>) -> TreeTOf<F, B> {
@@ -138,39 +149,27 @@ extension TreeTPartial: Monad where F: Monad {
     }
 
     private static func loop<A, B>(_ a: TreeTOf<F, Either<A, B>>, _ f: @escaping (A) -> TreeTOf<F, Either<A, B>>) -> Trampoline<TreeTOf<F, B>> {
-        .defer {
-            let fLiftedToEither: (Either<A, B>) -> Trampoline<TreeTOf<F, B>> = { e in
+        print("\(TreeTPartial.description(of: a)):")
+        return .defer {
+            let fLiftedToEither: (Either<A, Kind<F, B>>) -> Trampoline<TreeTOf<F, B>> = { e in
                 e.fold({ a in
                     loop(f(a), f)
-                }) { b in
-                    .done(.pure(b))
+                }) { fb in
+                    .done(TreeT(root: fb, subForest: []))
                 }
             }
 
-            let rootImageTrampoline = fLiftedToEither(a^.root)
+            let rootImageTrampoline = fLiftedToEither(a^.root.sequence()^)
+            let subForestImageTrampoline = a^.subForest.traverse { loop($0, f) }^
 
-            let subForestImagesTrampolines = a^.subForest.map { loop($0, f) }
 
-            // This is just traverse of Array over Trampoline
-            let subForestImageTrampoline: Trampoline<[TreeTOf<F, B>]> = subForestImagesTrampolines.reduce(Trampoline<[TreeTOf<F, B>]>.done([])) { (arrayTrampoline: Trampoline<[TreeTOf<F, B>]>, trampoline: Trampoline<TreeTOf<F, B>>) in
-                arrayTrampoline.flatMap { (array) in
-                    trampoline.flatMap { (tree) in
-                        .done(array + [tree])
-                    }
-                }
-            }
-
-            return rootImageTrampoline.flatMap { rootImage in
-                subForestImageTrampoline.flatMap { subForestImage in
-                    .done(rootImage^.appendSubForest(subForestImage.map { $0^ }))
-                }
-            }
+            return .map(rootImageTrampoline, subForestImageTrampoline) { $0^.appendSubForest($1.map { $0^ }) }^
         }
     }
 }
 
 // MARK: Instance of MonadTrans for TreeT
-extension TreeTPartial: MonadTrans where F: Monad {}
+extension TreeTPartial: MonadTrans where F: Monad & Traverse {}
 
 // MARK: Instance of Foldable for TreeT
 extension TreeTPartial: Foldable where F: Foldable {

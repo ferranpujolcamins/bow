@@ -240,9 +240,9 @@ extension _Either: Equatable where A: Equatable, B: Equatable {}
 extension _Either: Hashable where A: Hashable, B: Hashable {}
 
 // MARK: Conformance of Either to CustomStringConvertible
-extension Either: CustomStringConvertible {
-    public var description: String {
-        fold({ a in "Left(\(a))"},
+extension EitherPartial: CustomStringConvertibleK where L: CustomStringConvertible{
+    public static func description<B>(of fa: Kind<EitherPartial<L>, B>) -> String where B : CustomStringConvertible {
+        fa^.fold({ a in "Left(\(a))"},
              { b in "Right(\(b))"})
     }
 }

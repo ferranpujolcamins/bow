@@ -134,9 +134,9 @@ public postfix func ^<A>(_ value: ZipperOf<A>) -> Zipper<A> {
 
 // MARK: Conformance of Zipper to CustomStringConvertible
 
-extension Zipper: CustomStringConvertible where A: CustomStringConvertible {
-    public var description: String {
-        "Zipper(left: \(left), focus: \(focus), right: \(right))"
+extension ZipperPartial: CustomStringConvertibleK {
+    public static func description<A>(of fa: ZipperOf<A>) -> String where A : CustomStringConvertible {
+        "Zipper(left: \(fa^.left), focus: \(fa^.focus), right: \(fa^.right))"
     }
 }
 

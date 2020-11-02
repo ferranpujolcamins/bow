@@ -190,9 +190,9 @@ private enum _Validated<A, B> {
 }
 
 // MARK: Conformance of Validated to CustomStringConvertible
-extension Validated: CustomStringConvertible where E: CustomStringConvertible, A: CustomStringConvertible {
-    public var description: String {
-        fold({ e in "Invalid(\(e.description))" },
+extension ValidatedPartial: CustomStringConvertibleK where E: CustomStringConvertible {
+    public static func description<A>(of fa: Kind<ValidatedPartial<I>, A>) -> String where A : CustomStringConvertible {
+        fa^.fold({ e in "Invalid(\(e.description))" },
              { a in "Valid(\(a.description))" })
     }
 }

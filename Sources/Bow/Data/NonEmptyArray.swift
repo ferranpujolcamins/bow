@@ -158,9 +158,9 @@ public extension NonEmptyArray where A: Equatable {
 }
 
 // MARK: Conformance of NonEmptyArray to CustomStringConvertible
-extension NonEmptyArray: CustomStringConvertible {
-    public var description: String {
-        "NonEmptyArray(\(self.all()))"
+extension NonEmptyArrayPartial: CustomStringConvertibleK {
+    public static func description<A>(of fa: Kind<ForNonEmptyArray, A>) -> String where A : CustomStringConvertible {
+        "NonEmptyArray(\(fa^.all()))"
     }
 }
 

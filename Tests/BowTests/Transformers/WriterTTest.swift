@@ -31,11 +31,6 @@ class WriterTTest: XCTestCase {
         MonadTransLaws<WriterTPartial<ForId, Int>, String, Int>.check()
         MonadTransLaws<WriterTPartial<ForOption, Int>, String, Int>.check()
     }
-
-    func testMonadTransLaws() {
-        MonadTransLaws<WriterTPartial<ForId, Int>>.check()
-        MonadTransLaws<WriterTPartial<ForOption, Int>>.check()
-    }
     
     func testSemigroupKLaws() {
         SemigroupKLaws<WriterTPartial<ForArrayK, Int>>.check()

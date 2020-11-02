@@ -144,9 +144,9 @@ public extension Array {
 }
 
 // MARK: Conformance of ArrayK to CustomStringConvertible.
-extension ArrayK: CustomStringConvertible {
-    public var description: String {
-        let contentsString = self.array.map { x in "\(x)" }.joined(separator: ", ")
+extension ArrayKPartial: CustomStringConvertibleK {
+    public static func description<A>(of fa: Kind<ForArrayK, A>) -> String where A : CustomStringConvertible {
+        let contentsString = fa^.array.map { x in "\(x)" }.joined(separator: ", ")
         return "ArrayK(\(contentsString))"
     }
 }

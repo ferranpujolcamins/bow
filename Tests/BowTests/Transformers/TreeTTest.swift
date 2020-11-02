@@ -29,8 +29,8 @@ class TreeTTest: XCTestCase {
     }
 
     func testMonadTransLaws() {
-        MonadTransLaws<TreeTPartial<ForId>>.check()
-        MonadTransLaws<TreeTPartial<ForOption>>.check()
+        MonadTransLaws<TreeTPartial<ForId>, String, Int>.check()
+        MonadTransLaws<TreeTPartial<ForOption>, String, Int>.check()
     }
 
     func testFoldableLaws() {
