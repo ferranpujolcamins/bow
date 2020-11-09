@@ -5,18 +5,18 @@ import XCTest
 
 public class MonadLaws<F: Monad & EquatableK & ArbitraryK> {
     public static func check(withStackSafety: Bool = true) {
-//        leftIdentity()
-//        rightIdentity()
-//        kleisliLeftIdentity()
-//        kleisliRightIdentity()
-//        flatMapCoherence()
-//        if withStackSafety {
-//            stackSafety()
-//        }
-//        tailRecMConsistentFlatMap()
-//        stackSafeFlatMapConsistentWithFlatMap()
+        leftIdentity()
+        rightIdentity()
+        kleisliLeftIdentity()
+        kleisliRightIdentity()
+        flatMapCoherence()
+        if withStackSafety {
+            stackSafety()
+        }
+        tailRecMConsistentFlatMap()
+        stackSafeFlatMapConsistentWithFlatMap()
         monadComprehensions()
-//        flatten()
+        flatten()
     }
     
     private static func leftIdentity() {
@@ -119,19 +119,19 @@ public class MonadLaws<F: Monad & EquatableK & ArbitraryK> {
             let fb = F.pure(b)
             let fc = F.pure(c)
             let fd = F.pure(d)
-            
+
             let x = Kind<F, Int>.var()
             let y = Kind<F, Int>.var()
             let z = Kind<F, Int>.var()
             let w = Kind<F, Int>.var()
-            
+
             let result = binding(
                 x <-- fa,
                 y <-- fb,
                 z <-- fc,
                 w <-- fd,
                 yield: x.get + y.get + z.get + w.get)
-            
+
             return result == F.pure(a + b + c + d)
         }
 
@@ -158,24 +158,24 @@ public class MonadLaws<F: Monad & EquatableK & ArbitraryK> {
             return result == F.pure(a + b + c + d)
         }
         
-        property("Monad comprehensions equivalence to flatMap") <~ forAll { (fa: KindOf<F, Int>, fb: KindOf<F, Double>, fc: KindOf<F, String>) in
+        property("Monad comprehensions equivalence to flatMap", arguments: CheckerArguments(replay: (StdGen(799044385, 9226), 0))) <~ forAll { (fa: KindOf<F, Int>, fb: KindOf<F, Double>, fc: KindOf<F, String>) in
+
             let r1 = fa.value.flatMap { a in
                 fb.value.flatMap { b in
                     fc.value.map { c in "\(a), \(b), \(c)" }
                 }
             }
-            
+
             let x = F.var(Int.self)
             let y = F.var(Double.self)
             let z = F.var(String.self)
-            
+
             let r2 = binding(
                 x <-- fa.value,
                 y <-- fb.value,
                 z <-- fc.value,
                 yield: "\(x.get), \(y.get), \(z.get)"
             )
-            
             return r1 == r2
         }
 

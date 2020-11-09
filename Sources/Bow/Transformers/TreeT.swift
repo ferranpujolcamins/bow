@@ -138,8 +138,6 @@ extension TreeTPartial: Selective where F: Monad & Traverse {}
 // TODO: can we relax traverse requirement?
 extension TreeTPartial: Monad where F: Monad & Traverse {
     public static func flatMap<A, B>(_ fa: TreeTOf<F, A>, _ f: @escaping (A) -> TreeTOf<F, B>) -> TreeTOf<F, B> {
-        print("------")
-        print("\(TreeTPartial.description(of: fa)):")
         return stackSafeFlatMap(fa, f)
     }
 
@@ -149,7 +147,6 @@ extension TreeTPartial: Monad where F: Monad & Traverse {
     }
 
     private static func loop<A, B>(_ a: TreeTOf<F, Either<A, B>>, _ f: @escaping (A) -> TreeTOf<F, Either<A, B>>) -> Trampoline<TreeTOf<F, B>> {
-        print("\(TreeTPartial.description(of: a)):")
         return .defer {
             let fLiftedToEither: (Either<A, Kind<F, B>>) -> Trampoline<TreeTOf<F, B>> = { e in
                 e.fold({ a in
@@ -196,21 +193,33 @@ extension TreeTPartial: Traverse where F: Traverse {
     }
 }
 
-//// MARK: Tree function builder
-//@_functionBuilder
-//struct TreeBuilder {
-//    public static func buildExpression<L>(_ value: L) -> Tree<L> {
-//        .pure(value)^
-//    }
-//
-//    public static func buildExpression<L>(_ tree: Tree<L>) -> Tree<L> {
-//        tree
-//    }
-//
-//    public static func buildBlock<L>(_ subtrees: Tree<L>...) -> [Tree<L>] {
-//        subtrees
-//    }
-//}
+// MARK: Tree function builder
+@_functionBuilder
+class TreeBuilder {
+    public static func buildExpression<F, A>(_ value: Kind<F, A>) -> TreeT<F, A> {
+        TreeT(root: value, subForest: [])
+    }
+
+    public static func buildExpression<F: Applicative, A>(_ value: A) -> TreeT<F, A> {
+        .pure(value)^
+    }
+
+    public static func buildExpression<F, A>(_ tree: TreeT<F, A>) -> TreeT<F, A> {
+        tree
+    }
+
+    public static func buildBlock<F, A>(_ subtrees: TreeT<F, A>...) -> [TreeT<F, A>] {
+        subtrees
+    }
+}
+
+struct File {
+    let name: String
+    let content: String
+}
+
+typealias Directory = TreeT< PairK, File>
+
 //
 //@_functionBuilder
 //struct MagicTreeBuilder<A, B> {

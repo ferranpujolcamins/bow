@@ -164,7 +164,6 @@ public extension Monad {
                 map(fa) { .left(.some($0)) }
             }) { i in
                 map(f(i)) { a in
-                    print(a)
                         return .right(a)
                 }
             }

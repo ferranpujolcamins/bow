@@ -15,6 +15,14 @@ extension TreeT: Arbitrary where F: ArbitraryK, A: Arbitrary {
         return Gen.zip(KindOf<F, A>.arbitrary.map { $0.value }, subForests)
             .map(TreeT.init)
     }
+
+    public static func shrink(_ t: TreeT) -> [TreeT] {
+        let shrunkSubForests = Array.shrink(t.subForest).map { $0.flatMap { a in
+            shrink(a)
+        } }
+
+        return shrunkSubForests.map { TreeT(root: t.root, subForest: $0) }
+    }
 }
 
 // MARK: Instance of ArbitraryK for Tree

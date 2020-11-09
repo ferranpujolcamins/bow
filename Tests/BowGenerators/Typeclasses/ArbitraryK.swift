@@ -13,6 +13,12 @@ public struct KindOf<F, A> {
     }
 }
 
+extension KindOf: CustomStringConvertible where F: CustomStringConvertibleK, A: CustomStringConvertible {
+    public var description: String {
+        value.description
+    }
+}
+
 extension KindOf: Equatable where F: EquatableK, A: Equatable {}
 
 extension KindOf: Hashable where F: HashableK, A: Hashable {}
