@@ -218,72 +218,65 @@ struct File {
     let content: String
 }
 
-typealias Directory = TreeT< PairK, File>
+typealias TreeWithAssociatedData<A, B> = TreeT<PairKPartial<IdPartial, ConstPartial<[B]>>, A>
 
-//
-//@_functionBuilder
-//struct MagicTreeBuilder<A, B> {
-//    typealias Expression = Either<B, MagicTree<A, B>>
-//    typealias Block = ([B], [MagicTree<A, B>])
-//    public static func buildExpression(_ value: B) -> Expression {
-//        .left(value)
-//    }
-//
-//    public static func buildExpression(_ tree: MagicTree<A, B>) -> Expression {
-//        .right(tree)
-//    }
-//
-//    public static func buildBlock(_ expressions: Expression...) -> Block {
-//        let expressions = ArrayK(expressions)
-//        let nodes = expressions.mapFilter { Option.fromOptional($0.leftOrNil) }^.asArray
-//        let trees = expressions.mapFilter { Option.fromOptional($0.orNil) }^.asArray
-//        return (nodes, trees)
-//    }
-//}
-//
-//
-//
-//infix operator -<
-//
-////func -< <A>(_ root: A, @TreeBuilder _ subForest: () -> [Tree<A>]) -> Tree<A> {
-////    Tree(root: root, subForest: subForest())
-////}
-//
-////func someTree() -> Tree<Int> {
-////    3 -< {
-////        4 -< {
-////            5
-////            7
-////            8
-////        }
-////        5
-////        6
-////        7
-////    }
-////}
-//
-//
-//func -< <A, B>(_ root: A, @MagicTreeBuilder<A, B> _ content: () -> MagicTreeBuilder<A, B>.Block) -> MagicTree<A, B> {
-//    let content = content()
-//    return MagicTree(root: (root, content.0), subForest: content.1)
-//}
-//
-//
-//struct File {
-//    let name: String
-//    let content: String
-//}
-//
-//typealias FileSystem = MagicTree<String, File>
-//
-//func someFileSystem() -> FileSystem {
-//
-//    "root" -< {
-//        File(name: "", content: "")
-//        File(name: "", content: "")
-//        "subdir" -< {
-//            File(name: "", content: "")
-//            File(name: "", content: "")
-//        }
-//    }
-//}
+
+@_functionBuilder
+struct TreeWithAssociatedDataBuilder<A, B> {
+    typealias Expression = Either<B, TreeWithAssociatedData<A, B>>
+    typealias Block = ([B], [TreeWithAssociatedData<A, B>])
+    public static func buildExpression(_ value: B) -> Expression {
+        .left(value)
+    }
+
+    public static func buildExpression(_ tree: TreeWithAssociatedData<A, B>) -> Expression {
+        .right(tree)
+    }
+
+    public static func buildBlock(_ expressions: Expression...) -> Block {
+        let expressions = ArrayK(expressions)
+        let nodes = expressions.mapFilter { Option.fromOptional($0.leftOrNil) }^.asArray
+        let trees = expressions.mapFilter { Option.fromOptional($0.orNil) }^.asArray
+        return (nodes, trees)
+    }
+}
+
+infix operator -<
+
+func -< <A>(_ root: A, @TreeBuilder _ subForest: () -> [Tree<A>]) -> Tree<A> {
+    Tree(root: root, subForest: subForest())
+}
+
+func someTree() -> Tree<Int> {
+    3 -< {
+        4 -< {
+            5
+            7
+            8
+        }
+        5
+        6
+        7
+    }
+}
+
+
+func -< <A, B>(_ root: A, @TreeWithAssociatedDataBuilder<A, B> _ content: () -> TreeWithAssociatedDataBuilder<A, B>.Block) -> TreeWithAssociatedData<A, B> {
+    let content = content()
+    return TreeWithAssociatedData(root: PairK(Id(root), Const(content.0)), subForest: content.1)
+}
+
+
+typealias FileSystem = TreeWithAssociatedData<String, File>
+
+func someFileSystem() -> FileSystem {
+
+    "root" -< {
+        File(name: "", content: "")
+        File(name: "", content: "")
+        "subdir" -< {
+            File(name: "", content: "")
+            File(name: "", content: "")
+        }
+    }
+}
