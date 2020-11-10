@@ -1,5 +1,59 @@
 import Foundation
 
+public final class ForTreeTNode {}
+public final class TreeTNodePartial<F>: Kind<ForTreeTNode, F> {}
+public typealias TreeTNodeOf<F, A> = Kind<TreeTNodePartial<F>, A>
+public final class TreeTNode<F, A>: TreeTNodeOf<F, A> {
+    let root: A
+    let subForest: ArrayK<TreeT<F, A>>
+
+    init(root: A, subForest: ArrayK<TreeT<F, A>>) {
+        self.root = root
+        self.subForest = subForest
+    }
+
+    /// Safe downcast.
+    ///
+    /// - Parameter fa: Value in higher-kind form.
+    /// - Returns: Value cast to Tree.
+    public static func fix(_ fa: TreeTNodeOf<F, A>) -> TreeTNode<F, A> {
+        fa as! TreeTNode<F, A>
+    }
+}
+
+/// Safe downcast.
+///
+/// - Parameter fa: Value in higher-kind form.
+/// - Returns: Value cast to Tree.
+public postfix func ^<F, A>(_ fa: TreeTNodeOf<F, A>) -> TreeTNode<F, A> {
+    TreeTNode.fix(fa)
+}
+
+extension TreeTNodePartial: Invariant where F: Functor {}
+
+extension TreeTNodePartial: Functor where F: Functor {
+    public static func map<A, B>(_ fa: TreeTNodeOf<F, A>, _ f: @escaping (A) -> B) -> TreeTNodeOf<F, B> {
+        let y = fa^.subForest.map { s in s.map(f)^ }
+        let a = f ||> TreeTPartial<F>.map <| ()
+        let z = fa^.subForest
+        TreeTNode(root: f(fa^.root), subForest: fa^.subForest.map { s in s.map(f)^ })
+    }
+}
+
+//extension TreeTNodePartial: Applicative where F: Applicative {
+//    public static func pure<A>(_ a: A) -> TreeTNodeOf<F, A> {
+//
+//    }
+//
+//    public static func ap<A, B>(_ ff: TreeTNode<F, (A) -> B>, _ fa: TreeTNodeOf<F, A>) -> TreeTNodeOf<F, B> {
+//        <#code#>
+//    }
+//}
+
+
+
+
+
 /// Partial application of the Tree type constructor, omitting the last parameter.
 public typealias TreePartial<A> = TreeTPartial<ForId>
 
@@ -13,16 +67,16 @@ public typealias Tree<A> = TreeT<ForId, A>
 public final class ForTreeT {}
 
 /// Partial application of the Tree type constructor, omitting the last type parameter.
-public final class TreeTPartial<F: Functor>: Kind<ForTreeT, F> {}
+public final class TreeTPartial<F>: Kind<ForTreeT, F> {}
 
 /// Higher Kinded Type alias to improve readability over `Kind<ForTree, A>`.
-public typealias TreeTOf<F: Functor, A> = Kind<TreeTPartial<F>, A>
+public typealias TreeTOf<F, A> = Kind<TreeTPartial<F>, A>
 
 /// `TreeT` represents a non-empty tree that allows node to have an arbitrary number of children.
 ///
 /// The `Foldable` instance walks through the tree in depth-first order.
-public final class TreeT<F, A>: TreeTOf<F, A> where F: Functor {
-    public let value: Kind<F, Pair<A, [TreeT<F, A>]>>
+public final class TreeT<F, A>: TreeTOf<F, A> {
+    public let value: Kind<F, TreeTNode<F, A>>
 
     /// Safe downcast.
     ///
@@ -32,9 +86,20 @@ public final class TreeT<F, A>: TreeTOf<F, A> where F: Functor {
         fa as! TreeT<F, A>
     }
 
-    public init(value: Kind<F, Pair<A, [TreeT<F, A>]>>) {
+    public init(value: Kind<F, TreeTNode<F, A>) {
         self.value = value
     }
+}
+
+/// Safe downcast.
+///
+/// - Parameter fa: Value in higher-kind form.
+/// - Returns: Value cast to Tree.
+public postfix func ^<F, A>(_ fa: TreeTOf<F, A>) -> TreeT<F, A> {
+    TreeT.fix(fa)
+}
+
+extension TreeT where F: Functor {
 
     /// Initialises a tree.
     ///
@@ -76,42 +141,27 @@ public final class TreeT<F, A>: TreeTOf<F, A> where F: Functor {
     }
 }
 
-extension TreeTPartial {
+extension TreeTPartial where F: Functor {
     public static func liftF<A>(_ fa: Kind<F, A>) -> Kind<TreeTPartial<F>, A> {
         TreeT(root: fa, subForest: [])
     }
 }
 
-extension TreeT where F == ForId {
-    public convenience init(root: A, subForest: [Tree<A>]) {
-        self.init(root: Id(root), subForest: subForest)
-    }
-}
-
-/// Safe downcast.
-///
-/// - Parameter fa: Value in higher-kind form.
-/// - Returns: Value cast to Tree.
-public postfix func ^<F, A>(_ fa: TreeTOf<F, A>) -> TreeT<F, A> {
-    TreeT.fix(fa)
-}
-
-
-// MARK: Instance of CustomStringConvertibleK for TreeT
-extension TreeTPartial: CustomStringConvertibleK where F: CustomStringConvertibleK {
-    public static func description<A: CustomStringConvertible>(of fa: Kind<TreeTPartial, A>) -> String {
-
-        let rootDescription = F.description(of: fa^.root)
-        let subTreeDescription = F.description(of: fa^.subForest)
-
-        return "\(rootDescription) -<\n\(subTreeDescription)"
-    }
-}
+//// MARK: Instance of CustomStringConvertibleK for TreeT
+//extension TreeTPartial: CustomStringConvertibleK where F: CustomStringConvertibleK {
+//    public static func description<A: CustomStringConvertible>(of fa: Kind<TreeTPartial, A>) -> String {
+//
+//        let rootDescription = F.description(of: fa^.root)
+//        let subTreeDescription = F.description(of: fa^.subForest)
+//
+//        return "\(rootDescription) -<\n\(subTreeDescription)"
+//    }
+//}
 
 // MARK: Instance of EquatableK for TreeT
 extension TreeTPartial: EquatableK where F: EquatableK {
     public static func eq<A>(_ lhs: TreeTOf<F, A>, _ rhs: TreeTOf<F, A>) -> Bool where A : Equatable {
-        lhs^.root == rhs^.root && lhs^.subForest == rhs^.subForest
+        lhs^.value.eq(rhs^.value)
     }
 }
 
@@ -122,11 +172,14 @@ extension TreeTPartial: Functor where F: Functor {
         _ fa: TreeTOf<F, A>,
         _ f: @escaping (A) -> B) -> TreeTOf<F, B> {
 
-        TreeT<F, B>(value: fa^.value.map { pair in
-            pair.bimap(f, { $0.map { subTree in
-                subTree.map(f)^
-            } })
-        })
+        fa^.value.map { n in n.map(f)}
+
+
+//        TreeT<F, B>(value: fa^.value.map { pair in
+//            pair.bimap(f, { $0.map { subTree in
+//                subTree.map(f)^
+//            } })
+//        })
     }
 }
 
@@ -140,6 +193,27 @@ extension TreeTPartial: Applicative where F: Applicative {
         let ff = ff^
         let fa = fa^
 
+        /*
+                instance Applicative m => Applicative (TreeT m) where
+                   pure x = TreeT $ pure (x, [])
+                   (TreeT f_arg) <*> (TreeT m_arg) =
+                      TreeT $ mk <$> f_arg <*> m_arg
+                         where
+                            mk (f,fs) (m,ms) = (f m, ch1 ++ ch2)
+                               where
+                                  ch1 = map (fmap f) ms
+                                  ch2 = map (<*> TreeT m_arg) fs
+         */
+
+
+
+
+
+
+
+
+
+
         let e = F.ap(ff.root, fa.root)
         let r = fa.subForest.map { fs in fs.map { ap(ff, $0) } }
         let o = ff.subForest.map { fs in fs.map { ap($0, fa) } }
@@ -147,17 +221,7 @@ extension TreeTPartial: Applicative where F: Applicative {
         return TreeT(root: F.ap(ff.root, fa^.root),
                      subForest: fa^.subForest.map { TreeTPartial.ap(ff, $0)^ } // TODO: is this correct?
                         + ff.subForest.map { TreeTPartial.ap($0, fa)^ })
-/*
-        instance Applicative m => Applicative (TreeT m) where
-           pure x = TreeT $ pure (x, [])
-           (TreeT f_arg) <*> (TreeT m_arg) =
-              TreeT $ mk <$> f_arg <*> m_arg
-                 where
-                    mk (f,fs) (m,ms) = (f m, ch1 ++ ch2)
-                       where
-                          ch1 = map (fmap f) ms
-                          ch2 = map (<*> TreeT m_arg) fs
- */
+
     }
 }
  /*
