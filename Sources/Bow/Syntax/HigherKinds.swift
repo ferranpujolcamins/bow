@@ -1,5 +1,19 @@
 import Foundation
 
+public protocol Fixed {
+    associatedtype Unfixed
+    static func fix(_: Unfixed) -> Self
+}
+
+public postfix func ^<A, T: Fixed>(_ f: @escaping (A) -> T.Unfixed) -> (A) -> T {
+    { T.fix(f($0)) }
+}
+
+public postfix func ^<A, B, T: Fixed>(_ f: @escaping (A, B) -> T.Unfixed) -> (A, B) -> T {
+    { T.fix(f($0, $1)) }
+}
+
+
 /// Simulates a Higher-Kinded Type in Swift with 1 type argument.
 ///
 /// This class simulates Higher-Kinded Type support in Swift. `Kind<F, A>` is an alias for `F<A>`, which is not syntactically valid in Swift.

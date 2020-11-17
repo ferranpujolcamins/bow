@@ -21,10 +21,10 @@ public final class TreeTNode<F, A>: TreeTNodeOf<F, A> {
     }
 }
 
-/// Safe downcast.
-///
-/// - Parameter fa: Value in higher-kind form.
-/// - Returns: Value cast to Tree.
+///// Safe downcast.
+/////
+///// - Parameter fa: Value in higher-kind form.
+///// - Returns: Value cast to Tree.
 public postfix func ^<F, A>(_ fa: TreeTNodeOf<F, A>) -> TreeTNode<F, A> {
     TreeTNode.fix(fa)
 }
@@ -33,23 +33,40 @@ extension TreeTNodePartial: Invariant where F: Functor {}
 
 extension TreeTNodePartial: Functor where F: Functor {
     public static func map<A, B>(_ fa: TreeTNodeOf<F, A>, _ f: @escaping (A) -> B) -> TreeTNodeOf<F, B> {
-        let y = fa^.subForest.map { s in s.map(f)^ }
-        let a = f ||> TreeTPartial<F>.map <| ()
-        let z = fa^.subForest
-        TreeTNode(root: f(fa^.root), subForest: fa^.subForest.map { s in s.map(f)^ })
+        TreeTNode(
+            root: f(fa^.root),
+            subForest: fa^.subForest.map(TreeTPartial<F>.map~(__, f))^
+        )
     }
 }
 
-//extension TreeTNodePartial: Applicative where F: Applicative {
-//    public static func pure<A>(_ a: A) -> TreeTNodeOf<F, A> {
-//
-//    }
-//
-//    public static func ap<A, B>(_ ff: TreeTNode<F, (A) -> B>, _ fa: TreeTNodeOf<F, A>) -> TreeTNodeOf<F, B> {
-//        <#code#>
-//    }
-//}
+extension TreeTNodePartial: Applicative where F: Applicative {
+    public static func pure<A>(_ a: A) -> TreeTNodeOf<F, A> {
+        TreeTNode(root: a, subForest: .empty())
+    }
 
+    public static func ap<A, B>(_ ff: TreeTNodeOf<F, (A) -> B>, _ fa: TreeTNodeOf<F, A>) -> TreeTNodeOf<F, B> {
+        return TreeTNode(
+            root: ff^.root(fa^.subForest),
+            subForest: fa^.subForest.map(TreeTPartial<F>.map~(__, ff^.root))
+                + ff^.subForest.map(TreeTPartial<F>.ap~(__, TreeT(fa^)))
+        )
+    }
+}
+
+extension TreeTNodePartial: Monad where F: Monad {
+
+}
+
+//instance Monad m => Monad (NodeT m) where
+//  return =
+//    pure
+//
+//  (>>=) (NodeT x xs) k =
+//    case k x of
+//      NodeT y ys ->
+//        NodeT y $
+//          fmap (TreeT . fmap (>>= k) . runTreeT) xs ++ ys
 
 
 
@@ -86,9 +103,13 @@ public final class TreeT<F, A>: TreeTOf<F, A> {
         fa as! TreeT<F, A>
     }
 
-    public init(value: Kind<F, TreeTNode<F, A>) {
+    public init(_ value: Kind<F, TreeTNode<F, A>>) {
         self.value = value
     }
+}
+
+extension TreeT: Fixed {
+    typealias Unfixed = TreeTOf
 }
 
 /// Safe downcast.
@@ -144,6 +165,12 @@ extension TreeT where F: Functor {
 extension TreeTPartial where F: Functor {
     public static func liftF<A>(_ fa: Kind<F, A>) -> Kind<TreeTPartial<F>, A> {
         TreeT(root: fa, subForest: [])
+    }
+}
+
+extension TreeT where F: Applicative {
+    public init(_ node: TreeTNode<F, A>) {
+        self.init(F.pure(node))
     }
 }
 
